@@ -82,14 +82,14 @@
 #endif
 
 /*
+ *  Default seed.
+ */
+#define RAPID_SEED (0ull)
+
+/*
  *  Default secret parameters.
  */
 static const uint64_t rapid_secret[3] = {0x2d358dccaa6c78a5ull, 0x8bb84b93962eacc9ull, 0x4b33a62ed433d4a3ull};
-
-/*
- *  Default seed.
- */
-static const uint64_t rapid_seed = 0;
 
 /*
  *  64*64 -> 128bit multiply function
@@ -261,7 +261,7 @@ static inline uint64_t rapidhash_internal(const void *key, size_t len, uint64_t 
  *
  *  Returns a 64-bit hash.
  */
-inline uint64_t rapidhash_withSeed(const void *key, size_t len, uint64_t seed) {
+static inline uint64_t rapidhash_withSeed(const void *key, size_t len, uint64_t seed) {
   return rapidhash_internal(key, len, seed, rapid_secret);
 }
 
@@ -275,6 +275,6 @@ inline uint64_t rapidhash_withSeed(const void *key, size_t len, uint64_t seed) {
  *
  *  Returns a 64-bit hash.
  */
-inline uint64_t rapidhash(const void *key, size_t len) {
-  return rapidhash_withSeed(key, len, rapid_seed);
+static inline uint64_t rapidhash(const void *key, size_t len) {
+  return rapidhash_withSeed(key, len, RAPID_SEED);
 }
