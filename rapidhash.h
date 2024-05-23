@@ -237,7 +237,7 @@ static inline uint64_t rapidhash_internal(const void *key, size_t len, uint64_t 
     if(_unlikely_(i>48)){
       uint64_t see1=seed, see2=seed;
 #if (RAPIDHASH_UNROLLED==1)
-      while(_likely_(i>=96)){
+      while(_likely_(i>96)){
         seed=rapid_mix(rapid_read64(p)^secret[0],rapid_read64(p+8)^seed);
         see1=rapid_mix(rapid_read64(p+16)^secret[1],rapid_read64(p+24)^see1);
         see2=rapid_mix(rapid_read64(p+32)^secret[2],rapid_read64(p+40)^see2);
