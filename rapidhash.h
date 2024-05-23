@@ -48,12 +48,26 @@
 /*
  *  Protection macro, alters behaviour of rapid_mum multiplication function.
  *  
- *  0: Normal behavior
+ *  0: Normal behavior.
  *  1: Extra protection against entropy loss.
  *
  */
 #ifndef RAPIDHASH_PROTECTION
-#define RAPIDHASH_PROTECTION 0
+#define RAPIDHASH_PROTECTION (0)
+#endif
+
+/*
+ *  Unrolling macro, changes code definition for main hash function
+ *  
+ *  0: Legacy variant, each loop process 48 bytes.
+ *  1: Unrolled variant, each loop process 96 bytes.
+ *
+ *  Most modern CPUs should benefit from setting this value to 1.
+ *
+ *  This setting does not alter the output hash.
+ */
+#ifndef RAPIDHASH_UNROLLED
+#define RAPIDHASH_UNROLLED (1)
 #endif
 
 /*
@@ -222,6 +236,7 @@ static inline uint64_t rapidhash_internal(const void *key, size_t len, uint64_t 
     size_t i=len; 
     if(_unlikely_(i>48)){
       uint64_t see1=seed, see2=seed;
+#if (RAPIDHASH_UNROLLED==1)
       while(_likely_(i>=96)){
         seed=rapid_mix(rapid_read64(p)^secret[0],rapid_read64(p+8)^seed);
         see1=rapid_mix(rapid_read64(p+16)^secret[1],rapid_read64(p+24)^see1);
@@ -237,6 +252,14 @@ static inline uint64_t rapidhash_internal(const void *key, size_t len, uint64_t 
         see2=rapid_mix(rapid_read64(p+32)^secret[2],rapid_read64(p+40)^see2);
         p+=48; i-=48;
       }
+#else
+      do {
+        seed=rapid_mix(rapid_read64(p)^secret[0],rapid_read64(p+8)^seed);
+        see1=rapid_mix(rapid_read64(p+16)^secret[1],rapid_read64(p+24)^see1);
+        see2=rapid_mix(rapid_read64(p+32)^secret[2],rapid_read64(p+40)^see2);
+        p+=48; i-=48;
+      } while (_likely_(i>48));
+#endif
       seed^=see1^see2;
     }
     if(i>16){
