@@ -10,7 +10,7 @@ Extremely fast for both short and large inputs.
 Passes all tests in both SMHasher and SMHasher3.  
 Outstanding collision ratio when tested with datasets of 16B and 66B keys (detailed results in 'collisions' folder).
 
-**Universal** 
+**Universal**  
 Optimized for both AMD64 and modern AArch64 systems.  
 Compatible with gcc, clang and MSVC.  
 It does not use machine-specific vectorized or cryptographic instruction sets.
