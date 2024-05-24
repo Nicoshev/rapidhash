@@ -82,7 +82,7 @@
 #endif
 
 /*
- *  Endianness macros
+ *  Endianness macros.
  */
 #ifndef RAPIDHASH_LITTLE_ENDIAN
   #if defined(_WIN32) || defined(__LITTLE_ENDIAN__) || (defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)
@@ -98,7 +98,7 @@
 /*
  *  Default seed.
  */
-#define RAPID_SEED (0ull)
+#define RAPID_SEED (0xbdd89aa982704029ull)
 
 /*
  *  Default secret parameters.
