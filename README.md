@@ -6,6 +6,11 @@ rapidhash is based on [wyhash](https://github.com/wangyi-fudan/wyhash), with imp
 **Fast**  
 Extremely fast for both short and large inputs.
 
+**Universal**  
+Optimized for both AMD64 and modern AArch64 systems.  
+Compatible with gcc, clang and MSVC.  
+It does not use machine-specific vectorized or cryptographic instruction sets.
+
 **Excellent**  
 Passes all tests in both SMHasher and SMHasher3.  
 Outstanding collision ratio when tested with datasets of 16B and 66B keys: 
@@ -27,8 +32,3 @@ Outstanding collision ratio when tested with datasets of 16B and 66B keys:
 | __rapidhash__ | 24  | 62 Gi | 120.1 | 126 | 
 | __rapidhash__ | 32  | 62 Gi | 120.1 | 133 | 
 | __rapidhash__ | 48  | 62 Gi | 120.1 | 123 | 
-
-**Universal**  
-Optimized for both AMD64 and modern AArch64 systems.  
-Compatible with gcc, clang and MSVC.  
-It does not use machine-specific vectorized or cryptographic instruction sets.
