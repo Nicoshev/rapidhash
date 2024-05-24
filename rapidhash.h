@@ -48,26 +48,30 @@
 /*
  *  Protection macro, alters behaviour of rapid_mum multiplication function.
  *  
- *  0: Normal behavior.
- *  1: Extra protection against entropy loss.
+ *  RAPIDHASH_FAST: Normal behavior, max speed.
+ *  RAPIDHASH_PROTECTED: Extra protection against entropy loss.
  *
  */
-#ifndef RAPIDHASH_PROTECTION
-#define RAPIDHASH_PROTECTION (0)
+#ifndef RAPIDHASH_PROTECTED
+  #define RAPIDHASH_FAST
+#elif defined(RAPIDHASH_FAST)
+  #error "cannot define RAPIDHASH_PROTECTED and RAPIDHASH_FAST simultaneously"
 #endif
 
 /*
- *  Unrolling macro, changes code definition for main hash function
+ *  Unrolling macros, changes code definition for main hash function
  *  
- *  0: Legacy variant, each loop process 48 bytes.
- *  1: Unrolled variant, each loop process 96 bytes.
+ *  RAPIDHASH_COMPACT: Legacy variant, each loop process 48 bytes.
+ *  RAPIDHASH_UNROLLED: Unrolled variant, each loop process 96 bytes.
  *
- *  Most modern CPUs should benefit from setting this value to 1.
+ *  Most modern CPUs should benefit from having RAPIDHASH_UNROLLED.
  *
- *  This macro does not alter the output hash.
+ *  These macros do not alter the output hash.
  */
-#ifndef RAPIDHASH_UNROLLED
-#define RAPIDHASH_UNROLLED (1)
+#ifndef RAPIDHASH_COMPACT
+  #define RAPIDHASH_UNROLLED
+#elif defined(RAPIDHASH_UNROLLED)
+  #error "cannot define RAPIDHASH_COMPACT and RAPIDHASH_UNROLLED simultaneously"
 #endif
 
 /*
@@ -90,7 +94,7 @@
   #elif defined(__BIG_ENDIAN__) || (defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__)
     #define RAPIDHASH_LITTLE_ENDIAN 0
   #else
-    #warning could not determine endianness! Falling back to little endian.
+    #warning "could not determine endianness! Falling back to little endian."
     #define RAPIDHASH_LITTLE_ENDIAN 1
   #endif
 #endif
@@ -125,14 +129,14 @@ static const uint64_t rapid_secret[3] = {0x2d358dccaa6c78a5ull, 0x8bb84b93962eac
 static inline void rapid_mum(uint64_t *A, uint64_t *B){
 #if defined(__SIZEOF_INT128__)
   __uint128_t r=*A; r*=*B; 
-  #if(RAPIDHASH_PROTECTION>0)
+  #if(RAPIDHASH_PROTECTED)
   *A^=(uint64_t)r; *B^=(uint64_t)(r>>64);
   #else
   *A=(uint64_t)r; *B=(uint64_t)(r>>64);
   #endif
 #elif defined(_MSC_VER) && (defined(_WIN64) || defined(_M_HYBRID_CHPE_ARM64))
   #if defined(_M_X64)
-    #if(RAPIDHASH_PROTECTION>0)
+    #if(RAPIDHASH_PROTECTED)
     uint64_t  a,  b;
     a=_umul128(*A,*B,&b);
     *A^=a;  *B^=b;
@@ -140,7 +144,7 @@ static inline void rapid_mum(uint64_t *A, uint64_t *B){
     *A=_umul128(*A,*B,B);
     #endif
   #else
-    #if(RAPIDHASH_PROTECTION>0)
+    #if(RAPIDHASH_PROTECTED)
     uint64_t a, b;
     b = __umulh(*A, *B);
     a = *A * *B;
@@ -156,7 +160,7 @@ static inline void rapid_mum(uint64_t *A, uint64_t *B){
   uint64_t ha=*A>>32, hb=*B>>32, la=(uint32_t)*A, lb=(uint32_t)*B, hi, lo;
   uint64_t rh=ha*hb, rm0=ha*lb, rm1=hb*la, rl=la*lb, t=rl+(rm0<<32), c=t<rl;
   lo=t+(rm1<<32); c+=lo<t; hi=rh+(rm0>>32)+(rm1>>32)+c;
-  #if(RAPIDHASH_PROTECTION>0)
+  #if(RAPIDHASH_PROTECTED)
   *A^=lo;  *B^=hi;
   #else
   *A=lo;  *B=hi;
@@ -236,7 +240,7 @@ static inline uint64_t rapidhash_internal(const void *key, size_t len, uint64_t 
     size_t i=len; 
     if(_unlikely_(i>48)){
       uint64_t see1=seed, see2=seed;
-#if (RAPIDHASH_UNROLLED==1)
+#ifdef RAPIDHASH_UNROLLED
       while(_likely_(i>=96)){
         seed=rapid_mix(rapid_read64(p)^secret[0],rapid_read64(p+8)^seed);
         see1=rapid_mix(rapid_read64(p+16)^secret[1],rapid_read64(p+24)^see1);
