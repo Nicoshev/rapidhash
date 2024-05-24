@@ -34,7 +34,7 @@
  */
 
 /*
- *  Includes
+ *  Includes.
  */
 #include <stdint.h>
 #include <string.h>
@@ -58,7 +58,7 @@
 #endif
 
 /*
- *  Unrolling macros, changes code definition for main hash function
+ *  Unrolling macros, changes code definition for main hash function.
  *  
  *  RAPIDHASH_COMPACT: Legacy variant, each loop process 48 bytes.
  *  RAPIDHASH_UNROLLED: Unrolled variant, each loop process 96 bytes.
@@ -74,7 +74,7 @@
 #endif
 
 /*
- *  Likely and unlikely macros
+ *  Likely and unlikely macros.
  */
 #if defined(__GNUC__) || defined(__INTEL_COMPILER) || defined(__clang__)
   #define _likely_(x)  __builtin_expect(x,1)
@@ -109,7 +109,7 @@
 static const uint64_t rapid_secret[3] = {0x2d358dccaa6c78a5ull, 0x8bb84b93962eacc9ull, 0x4b33a62ed433d4a3ull};
 
 /*
- *  64*64 -> 128bit multiply function
+ *  64*64 -> 128bit multiply function.
  *  
  *  @param A  Address of 64-bit number.
  *  @param B  Address of 64-bit number.
@@ -214,7 +214,7 @@ static inline uint64_t rapid_read32(const uint8_t *p) {
 static inline uint64_t rapid_readSmall(const uint8_t *p, size_t k) { return (((uint64_t)p[0])<<56)|(((uint64_t)p[k>>1])<<32)|p[k-1];}
 
 /*
- *  rapidhash main function
+ *  rapidhash main function.
  *
  *  @param key     Buffer to be hashed.
  *  @param len     @key length, in bytes.
