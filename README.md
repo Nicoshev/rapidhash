@@ -1,4 +1,4 @@
-rapidhash - Very fast, high quality, platform independant hashing algorithm.
+rapidhash - Very fast, high quality, platform independent.
 ====
 
 rapidhash is based on [wyhash](https://github.com/wangyi-fudan/wyhash), with improved speed, quality and compatibility.
