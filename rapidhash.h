@@ -50,7 +50,6 @@
  *  
  *  RAPIDHASH_FAST: Normal behavior, max speed.
  *  RAPIDHASH_PROTECTED: Extra protection against entropy loss.
- *
  */
 #ifndef RAPIDHASH_PROTECTED
   #define RAPIDHASH_FAST
@@ -124,7 +123,6 @@ static const uint64_t rapid_secret[3] = {0x2d358dccaa6c78a5ull, 0x8bb84b93962eac
  *  When RAPIDHASH_PROTECTION>0:
  *  Xors and overwrites A contents with C's low 64 bits.
  *  Xors and overwrites B contents with C's high 64 bits.
- *
  */
 static inline void rapid_mum(uint64_t *A, uint64_t *B){
 #if defined(__SIZEOF_INT128__)
