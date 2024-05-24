@@ -100,23 +100,21 @@ The command line becomes:
 
 Here are a few results produced with this tester:
 
-| Algorithm | Input Len | Nb Hashes | Expected | Nb Collisions | Notes |
-| ---        | --- | ---    | ---   | --- | --- |
-| __XXH3__   | 255 | 100 Gi | 312.5 | 326 |  |
-| __XXH64__  | 255 | 100 Gi | 312.5 | 294 |  |
-| __XXH128__ low64 | 512 | 100 Gi | 312.5 | 321 |  |
-| __XXH128__ high64| 512 | 100 Gi | 312.5 | 325 |  |
-| __XXH128__ | 255 | 100 Gi |   0.0 |   0 | a 128-bit hash is expected to generate 0 collisions |
+| Algorithm | Input Len | Nb Hashes | Expected | Nb Collisions | 
+| ---           | --- | ---   | ---   | --- | 
+| __rapidhash__ | 16  | 15 Gi |   7.0 |  12 |
+| __rapidhash__ | 24  | 15 Gi |   7.0 |   7 |
+| __rapidhash__ | 32  | 15 Gi |   7.0 |  12 |
+| __rapidhash__ | 48  | 15 Gi |   7.0 |   7 |
+| __rapidhash__ | 64  | 15 Gi |   7.0 |   6 |
+| __rapidhash__ | 96  | 15 Gi |   7.0 |   9 |
+| __rapidhash__ | 128 | 15 Gi |   7.0 |  12 |
+| __rapidhash__ | 192 | 15 Gi |   7.0 |   7 |
+| __rapidhash__ | 256 | 15 Gi |   7.0 |   4 |
+| __rapidhash__ | 384 | 15 Gi |   7.0 |   6 |
+| __rapidhash__ | 12  | 62 Gi | 120.1 | 131 |
+| __rapidhash__ | 16  | 62 Gi | 120.1 | 127 |
+| __rapidhash__ | 24  | 62 Gi | 120.1 | 126 |
+| __rapidhash__ | 32  | 62 Gi | 120.1 | 133 |
+| __rapidhash__ | 48  | 62 Gi | 120.1 | 123 |
 
-Test on small inputs:
-
-| Algorithm  | Input Len | Nb Hashes | Expected | Nb Collisions | Notes |
-| ---        | --- | ---    | --- | --- | --- |
-| __XXH64__  |   8 | 100 Gi | 312.5 | __0__ | `XXH64` is bijective for `len==8` |
-| __XXH3__   |   8 | 100 Gi | 312.5 | __0__ | `XXH3` is also bijective for `len==8` |
-| __XXH3__   |  16 | 100 Gi | 312.5 | 332 |  |
-| __XXH3__   |  32 |  14 Gi |   6.1 |   3 |  |
-| __XXH128__ |  16 |  25 Gi |   0.0 |   0 | test range 9-16 |
-| __XXH128__ |  32 |  25 Gi |   0.0 |   0 | test range 17-128 |
-| __XXH128__ | 100 |  13 Gi |   0.0 |   0 | test range 17-128 |
-| __XXH128__ | 200 |  13 Gi |   0.0 |   0 | test range 129-240 |
