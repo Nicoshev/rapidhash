@@ -54,7 +54,7 @@
 #ifndef RAPIDHASH_PROTECTED
   #define RAPIDHASH_FAST
 #elif defined(RAPIDHASH_FAST)
-  #error "cannot define RAPIDHASH_PROTECTED and RAPIDHASH_FAST simultaneously"
+  #error "cannot define RAPIDHASH_PROTECTED and RAPIDHASH_FAST simultaneously."
 #endif
 
 /*
@@ -70,7 +70,7 @@
 #ifndef RAPIDHASH_COMPACT
   #define RAPIDHASH_UNROLLED
 #elif defined(RAPIDHASH_UNROLLED)
-  #error "cannot define RAPIDHASH_COMPACT and RAPIDHASH_UNROLLED simultaneously"
+  #error "cannot define RAPIDHASH_COMPACT and RAPIDHASH_UNROLLED simultaneously."
 #endif
 
 /*
