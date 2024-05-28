@@ -17,6 +17,7 @@ Outstanding collision ratio when tested with datasets of 16B and 66B keys:
 
 | Input Len | Nb Hashes | Expected | Nb Collisions | 
 | --- | ---   | ---   | --- | 
+| 12  | 15 Gi |   7.0 |   7 | 
 | 16  | 15 Gi |   7.0 |  12 | 
 | 24  | 15 Gi |   7.0 |   7 | 
 | 32  | 15 Gi |   7.0 |  12 | 
