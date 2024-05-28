@@ -114,7 +114,7 @@ static const uint64_t rapid_secret[3] = {0x2d358dccaa6c78a5ull, 0x8bb84b93962eac
  *  @param A  Address of 64-bit number.
  *  @param B  Address of 64-bit number.
  *
- *  Calculates 128-bit C = A * B.
+ *  Calculates 128-bit C = *A * *B.
  *
  *  When RAPIDHASH_FAST is defined:
  *  Overwritres A contents with C's low 64 bits.
