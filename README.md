@@ -1,13 +1,13 @@
 rapidhash - Very fast, high quality, platform-independent
 ====
 
-The fastest recommended function by [SMHasher](https://github.com/rurban/smhasher?tab=readme-ov-file#summary). 
+The fastest recommended hash function by [SMHasher](https://github.com/rurban/smhasher?tab=readme-ov-file#summary). 
 
 rapidhash is based on [wyhash](https://github.com/wangyi-fudan/wyhash), with improved speed, quality and compatibility.
 
 **Fast**  
 Extremely fast for both short and large inputs.  
-The fastest function passing all tests in [SMHasher](https://github.com/rurban/smhasher?tab=readme-ov-file#smhasher). 
+The fastest hash function passing all tests in [SMHasher](https://github.com/rurban/smhasher?tab=readme-ov-file#smhasher). 
 
 **Universal**  
 Optimized for both AMD64 and modern AArch64 systems.  
