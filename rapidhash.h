@@ -89,12 +89,12 @@
  */
 #ifndef RAPIDHASH_LITTLE_ENDIAN
   #if defined(_WIN32) || defined(__LITTLE_ENDIAN__) || (defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)
-    #define RAPIDHASH_LITTLE_ENDIAN 1
+    #define RAPIDHASH_LITTLE_ENDIAN
   #elif defined(__BIG_ENDIAN__) || (defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__)
-    #define RAPIDHASH_LITTLE_ENDIAN 0
+    #define RAPIDHASH_BIG_ENDIAN
   #else
     #warning "could not determine endianness! Falling back to little endian."
-    #define RAPIDHASH_LITTLE_ENDIAN 1
+    #define RAPIDHASH_LITTLE_ENDIAN
   #endif
 #endif
 
@@ -127,14 +127,14 @@ static const uint64_t rapid_secret[3] = {0x2d358dccaa6c78a5ull, 0x8bb84b93962eac
 static inline void rapid_mum(uint64_t *A, uint64_t *B){
 #if defined(__SIZEOF_INT128__)
   __uint128_t r=*A; r*=*B; 
-  #if(RAPIDHASH_PROTECTED)
+  #ifdef RAPIDHASH_PROTECTED
   *A^=(uint64_t)r; *B^=(uint64_t)(r>>64);
   #else
   *A=(uint64_t)r; *B=(uint64_t)(r>>64);
   #endif
 #elif defined(_MSC_VER) && (defined(_WIN64) || defined(_M_HYBRID_CHPE_ARM64))
   #if defined(_M_X64)
-    #if(RAPIDHASH_PROTECTED)
+    #ifdef RAPIDHASH_PROTECTED
     uint64_t  a,  b;
     a=_umul128(*A,*B,&b);
     *A^=a;  *B^=b;
@@ -142,7 +142,7 @@ static inline void rapid_mum(uint64_t *A, uint64_t *B){
     *A=_umul128(*A,*B,B);
     #endif
   #else
-    #if(RAPIDHASH_PROTECTED)
+    #ifdef RAPIDHASH_PROTECTED
     uint64_t a, b;
     b = __umulh(*A, *B);
     a = *A * *B;
@@ -158,7 +158,7 @@ static inline void rapid_mum(uint64_t *A, uint64_t *B){
   uint64_t ha=*A>>32, hb=*B>>32, la=(uint32_t)*A, lb=(uint32_t)*B, hi, lo;
   uint64_t rh=ha*hb, rm0=ha*lb, rm1=hb*la, rl=la*lb, t=rl+(rm0<<32), c=t<rl;
   lo=t+(rm1<<32); c+=lo<t; hi=rh+(rm0>>32)+(rm1>>32)+c;
-  #if(RAPIDHASH_PROTECTED)
+  #ifdef RAPIDHASH_PROTECTED
   *A^=lo;  *B^=hi;
   #else
   *A=lo;  *B=hi;
@@ -180,7 +180,7 @@ static inline uint64_t rapid_mix(uint64_t A, uint64_t B){ rapid_mum(&A,&B); retu
 /*
  *  Read functions.
  */
-#if (RAPIDHASH_LITTLE_ENDIAN)
+#ifdef RAPIDHASH_LITTLE_ENDIAN
 static inline uint64_t rapid_read64(const uint8_t *p) { uint64_t v; memcpy(&v, p, 8); return v;}
 static inline uint64_t rapid_read32(const uint8_t *p) { uint32_t v; memcpy(&v, p, 4); return v;}
 #elif defined(__GNUC__) || defined(__INTEL_COMPILER) || defined(__clang__)
