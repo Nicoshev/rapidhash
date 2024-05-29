@@ -6,7 +6,7 @@ The fastest recommended function by [SMHasher](https://github.com/rurban/smhashe
 rapidhash is based on [wyhash](https://github.com/wangyi-fudan/wyhash), with improved speed, quality and compatibility.
 
 **Fast**  
-Extremely fast for both short and large inputs.
+Extremely fast for both short and large inputs. 
 The fastest function passing all tests in [SMHasher](https://github.com/rurban/smhasher?tab=readme-ov-file#smhasher). 
 
 **Universal**  
