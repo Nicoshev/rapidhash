@@ -38,3 +38,5 @@ Outstanding collision ratio when tested with datasets of 16B and 66B keys:
 | 56  | 62 Gi | 120.1 | 143 | 
 | 64  | 62 Gi | 120.1 | 192 |
 | 256 | 62 Gi | 120.1 | 181 | 
+
+More results can be found in the [collisions folder](https://github.com/Nicoshev/rapidhash/tree/master/collisions)
