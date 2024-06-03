@@ -46,11 +46,11 @@ Collision-based hash quality study
 
 A perfect hash function distributes its domain uniformly onto the image.  
 When the domain's cardinality is a multiple of the image's cardinality, each potential output has the same probability of being produced.  
-A function producing 64-bit hashes should have a $p=1/2^(64)$ of generating each output.  
+A function producing 64-bit hashes should have a $p=1/2^{64}$ of generating each output.  
 
 If we compute $n$ hashes, the expected amount of collisions should be the number of unique input pairs times the probability of producing a given hash.  
-This should be $(n*(n-1))/2 * 1/2^(64)$, or simplified: $(n*(n-1))/2^(65)$.  
-In the case of hashing $15*2^30$ (~16.1B) different keys, we should expect to see $7.03$ collisions.  
+This should be $(n*(n-1))/2 * 1/2^{64}$, or simplified: $(n*(n-1))/2^{65}$.  
+In the case of hashing $15*2^{30}$ (~16.1B) different keys, we should expect to see $7.03$ collisions.  
 
 We present an experiment in which we use rapidhash to hash 68 datasets of 15Gi keys each.  
 For each dataset, the amount of collisions produced is recorded as measurement.  
