@@ -16,7 +16,7 @@ It does not use machine-specific vectorized or cryptographic instruction sets.
 
 **Excellent**  
 Passes all tests in both [SMHasher](https://github.com/rurban/smhasher/blob/master/doc/rapidhash.txt) and SMHasher3.  
-[Collision-based quality study](https://github.com/Nicoshev/rapidhash/tree/master?tab=readme-ov-file#collision-based-hash-quality-study) showed collision probability close to ideal.
+[Collision-based quality study](https://github.com/Nicoshev/rapidhash/tree/master?tab=readme-ov-file#collision-based-hash-quality-study) showed collision probability close to ideal.  
 Outstanding collision ratio when tested with datasets of 16B and 66B keys: 
 
 | Input Len | Nb Hashes | Expected | Nb Collisions | 
