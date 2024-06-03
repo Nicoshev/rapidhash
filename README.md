@@ -16,6 +16,7 @@ It does not use machine-specific vectorized or cryptographic instruction sets.
 
 **Excellent**  
 Passes all tests in both [SMHasher](https://github.com/rurban/smhasher/blob/master/doc/rapidhash.txt) and SMHasher3.  
+[Collision-based quality study](https://github.com/Nicoshev/rapidhash/tree/master?tab=readme-ov-file#collision-based-hash-quality-study) showed collision probability close to ideal.
 Outstanding collision ratio when tested with datasets of 16B and 66B keys: 
 
 | Input Len | Nb Hashes | Expected | Nb Collisions | 
@@ -55,7 +56,7 @@ In the case of hashing $15*2^{30}$ (~16.1B) different keys, we should expect to 
 We present an experiment in which we use rapidhash to hash 68 datasets of 15Gi keys each.  
 For each dataset, the amount of collisions produced is recorded as measurement.  
 Ideally, the average among measurements should be $7.03$ and its histogram should approximate a binomial distribution.  
-We obtained a mean value of $7.72$, just $9.8\%$ over $7.03$.  
+We obtained a mean value of $7.72$, just $9.8$% over $7.03$.  
 The results histogram, depicted below, does resemble a slightly inclined binomial distribution:
 
 ![rapidhash, collisions, histogram](https://github.com/Nicoshev/rapidhash/assets/127915393/fc4c7c76-69b3-4d68-908b-f3e8723a32bb)
