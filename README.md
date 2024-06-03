@@ -40,3 +40,25 @@ Outstanding collision ratio when tested with datasets of 16B and 66B keys:
 | 256 | 62 Gi | 120.1 | 181 | 
 
 More results can be found in the [collisions folder](https://github.com/Nicoshev/rapidhash/tree/master/collisions)
+
+Collision-based hash quality study
+-------------------------
+
+A perfect hash function distributes its domain uniformly onto the image.  
+When the domain's cardinality is a multiple of the image's cardinality, each potential output has the same probability of being produced.  
+A function producing 64-bit hashes should have a $p=1/2^64$ of generating each output.  
+
+If we compute $n$ hashes, the expected amount of collisions should be the number of unique input pairs times the probability of producing a given hash.  
+This should be $(n*(n-1))/2 * 1/2^64$, or simplified: $(n*(n-1))/2^65$.  
+In the case of hashing $15*2^30$ (~16.1B) different keys, we should expect to see $7.03$ collisions.  
+
+We present an experiment in which we use rapidhash to hash 68 datasets of 15Gi keys each.  
+For each dataset, the amount of collisions produced is recorded as measurement.  
+Ideally, the average among measurements should be $7.03$ and its histogram should approximate a binomial distribution.  
+We obtained a mean value of $7.72$, just $9.8%$ more than $7.03$.  
+The results histogram, depicted below, does resemble a slightly inclined binomial distribution:
+
+![rapidhash, collisions, histogram](https://github.com/Nicoshev/rapidhash/assets/127915393/fc4c7c76-69b3-4d68-908b-f3e8723a32bb)
+
+Each dataset individual result can be found in the [collisions folder](https://github.com/Nicoshev/rapidhash/tree/master/collisions)
+
