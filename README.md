@@ -60,5 +60,6 @@ The results histogram, depicted below, does resemble a slightly inclined binomia
 
 ![rapidhash, collisions, histogram](https://github.com/Nicoshev/rapidhash/assets/127915393/fc4c7c76-69b3-4d68-908b-f3e8723a32bb)
 
-Each dataset individual result can be found in the [collisions folder](https://github.com/Nicoshev/rapidhash/tree/master/collisions)
+Each dataset individual result can be found in the [collisions folder](https://github.com/Nicoshev/rapidhash/tree/master/collisions)  
+The provided default seed and the [collision test program](https://github.com/Nicoshev/rapidhash/tree/master/collisions) were used to produce the results.  
 
