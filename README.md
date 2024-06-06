@@ -1,13 +1,17 @@
 rapidhash - Very fast, high quality, platform-independent
 ====
 
-The fastest recommended hash function by [SMHasher](https://github.com/rurban/smhasher?tab=readme-ov-file#summary). 
+The fastest recommended hash function by [SMHasher](https://github.com/rurban/smhasher?tab=readme-ov-file#summary).  
 
-rapidhash is based on [wyhash](https://github.com/wangyi-fudan/wyhash), with improved speed, quality and compatibility.
+The fastest passing hash in [SMHasher3](https://gitlab.com/fwojcik/smhasher3/-/blob/main/results/README.md#passing-hashes).  
+
+rapidhash is based on [wyhash](https://github.com/wangyi-fudan/wyhash), with improved speed, quality and compatibility.  
 
 **Fast**  
 Extremely fast for both short and large inputs.  
-The fastest hash function passing all tests in [SMHasher](https://github.com/rurban/smhasher?tab=readme-ov-file#smhasher). 
+The fastest hash function passing all tests in [SMHasher](https://github.com/rurban/smhasher?tab=readme-ov-file#smhasher).  
+The fastest hash function passing all tests in [SMHasher3](https://gitlab.com/fwojcik/smhasher3/-/blob/main/results/README.md#passing-hashes).  
+About 6% higher throughput than wyhash according to SMHasher and SMHasher3 reports.  
 
 **Universal**  
 Optimized for both AMD64 and modern AArch64 systems.  
@@ -15,7 +19,7 @@ Compatible with gcc, clang, icx and MSVC.
 It does not use machine-specific vectorized or cryptographic instruction sets.
 
 **Excellent**  
-Passes all tests in both [SMHasher](https://github.com/rurban/smhasher/blob/master/doc/rapidhash.txt) and SMHasher3.  
+Passes all tests in both [SMHasher](https://github.com/rurban/smhasher/blob/master/doc/rapidhash.txt) and [SMHasher3](https://gitlab.com/fwojcik/smhasher3/-/blob/main/results/raw/rapidhash.txt).  
 [Collision-based quality study](https://github.com/Nicoshev/rapidhash/tree/master?tab=readme-ov-file#collision-based-hash-quality-study) showed collision probability close to ideal.  
 Outstanding collision ratio when tested with datasets of 16B and 66B keys: 
 
@@ -40,7 +44,7 @@ Outstanding collision ratio when tested with datasets of 16B and 66B keys:
 | 64  | 62 Gi | 120.1 | 192 |
 | 256 | 62 Gi | 120.1 | 181 | 
 
-More results can be found in the [collisions folder](https://github.com/Nicoshev/rapidhash/tree/master/collisions)
+More results can be found in the [collisions folder](https://github.com/Nicoshev/rapidhash/tree/master/collisions)  
 
 Collision-based hash quality study
 -------------------------
