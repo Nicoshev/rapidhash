@@ -66,6 +66,6 @@ The results histogram, depicted below, does resemble a slightly inclined binomia
 ![rapidhash, collisions, histogram](https://github.com/Nicoshev/rapidhash/assets/127915393/fc4c7c76-69b3-4d68-908b-f3e8723a32bb)
 
 Each dataset individual result and the collisions test program can be found in the [collisions folder](https://github.com/Nicoshev/rapidhash/tree/master/collisions).  
-The same datasets were hashed using wyhash and its default seed $0$, yielding a higher mean collisions number of $8.06$.  
+The same datasets were hashed using wyhash and its default seed $0$, yielding a higher mean collisions number of $8.06$  
 The provided default seed was used to produce rapidhash results.  
 
