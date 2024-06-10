@@ -57,7 +57,7 @@ If we compute $n$ hashes, the expected amount of collisions should be the number
 This should be $(n*(n-1))/2 * 1/2^{64}$, or simplified: $(n*(n-1))/2^{65}$.  
 In the case of hashing $15*2^{30}$ (~16.1B) different keys, we should expect to see $7.03$ collisions.  
 
-We present an experiment in which we use rapidhash to hash $68$ datasets of $15*2^{30}(15Gi)$ keys each.  
+We present an experiment in which we use rapidhash to hash $68$ datasets of $15*2^{30}$ (15Gi) keys each.  
 For each dataset, the amount of collisions produced is recorded as measurement.  
 Ideally, the average among measurements should be $7.03$ and its histogram should approximate a binomial distribution.  
 We obtained a mean value of $7.72$, just $9.8$% over $7.03$.  
