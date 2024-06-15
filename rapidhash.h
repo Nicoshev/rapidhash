@@ -117,8 +117,8 @@ static const uint64_t rapid_secret[3] = {0x2d358dccaa6c78a5ull, 0x8bb84b93962eac
  *  Calculates 128-bit C = *A * *B.
  *
  *  When RAPIDHASH_FAST is defined:
- *  Overwritres A contents with C's low 64 bits.
- *  Overwritres B contents with C's high 64 bits.
+ *  Overwrites A contents with C's low 64 bits.
+ *  Overwrites B contents with C's high 64 bits.
  *
  *  When RAPIDHASH_PROTECTED is defined:
  *  Xors and overwrites A contents with C's low 64 bits.
