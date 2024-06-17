@@ -209,7 +209,7 @@ static inline uint64_t rapid_read32(const uint8_t *p) {
  *  Always reads and combines 3 bytes from memory.
  *  Guarantees to read each buffer position at least once.
  *  
- *  Returns a 64-bit value contaning all three bytes read. 
+ *  Returns a 64-bit value containing all three bytes read. 
  */
 static inline uint64_t rapid_readSmall(const uint8_t *p, size_t k) { return (((uint64_t)p[0])<<56)|(((uint64_t)p[k>>1])<<32)|p[k-1];}
 
