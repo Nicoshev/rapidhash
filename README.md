@@ -5,7 +5,7 @@ The fastest recommended hash function by [SMHasher](https://github.com/rurban/sm
 
 The fastest passing hash in [SMHasher3](https://gitlab.com/fwojcik/smhasher3/-/blob/main/results/README.md#passing-hashes).  
 
-rapidhash is based on [wyhash](https://github.com/wangyi-fudan/wyhash), with improved speed, quality and compatibility.  
+rapidhash is [wyhash](https://github.com/wangyi-fudan/wyhash) official successor, with improved speed, quality and compatibility.  
 
 **Fast**  
 Extremely fast for both short and large inputs.  
