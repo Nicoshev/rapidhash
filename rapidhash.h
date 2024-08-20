@@ -58,7 +58,7 @@
   #endif
 #else
   #define RAPIDHASH_NOEXCEPT 
-  #define RAPIDHASH_CONSTEXPR const
+  #define RAPIDHASH_CONSTEXPR static const
   #ifndef RAPIDHASH_INLINE
     #define RAPIDHASH_INLINE static inline
   #endif
