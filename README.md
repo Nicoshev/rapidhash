@@ -16,7 +16,7 @@ About 6% higher throughput than wyhash according to SMHasher and SMHasher3 repor
 **Universal**  
 Optimized for both AMD64 and modern AArch64 systems.  
 Compatible with gcc, clang, icx and MSVC.  
-It does not use machine-specific vectorized or cryptographic instruction sets.
+It does not use machine-specific vectorized or cryptographic instruction sets.  
 Prepared for both C and C++ compilation.
 
 **Excellent**  
