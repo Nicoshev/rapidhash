@@ -17,6 +17,7 @@ About 6% higher throughput than wyhash according to SMHasher and SMHasher3 repor
 Optimized for both AMD64 and modern AArch64 systems.  
 Compatible with gcc, clang, icx and MSVC.  
 It does not use machine-specific vectorized or cryptographic instruction sets.
+Prepared for both C and C++ compilation.
 
 **Excellent**  
 Passes all tests in both [SMHasher](https://github.com/rurban/smhasher/blob/master/doc/rapidhash.txt) and [SMHasher3](https://gitlab.com/fwojcik/smhasher3/-/blob/main/results/raw/rapidhash.txt).  
