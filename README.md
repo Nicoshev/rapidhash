@@ -70,3 +70,6 @@ Each dataset individual result and the collisions test program can be found in t
 The same datasets were hashed using wyhash and its default seed $0$, yielding a higher mean collision value of $8.06$  
 The provided default seed was used to produce rapidhash results.  
 
+Ports
+-------------------------
+[Rust](https://github.com/hoxxep/rapidhash) by hoxxep
