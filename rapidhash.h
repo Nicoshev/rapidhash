@@ -48,7 +48,7 @@
 /*
  *  C++ macros.
  *
- *  RAPIDHASH_INLINE can be overriden to be stronger than a hint, i.e. by adding __attribute__((always_inline)).
+ *  RAPIDHASH_INLINE can be overridden to be stronger than a hint, i.e. by adding __attribute__((always_inline)).
  */
 #ifdef __cplusplus
   #define RAPIDHASH_NOEXCEPT noexcept
@@ -57,7 +57,7 @@
     #define RAPIDHASH_INLINE inline
   #endif
 #else
-  #define RAPIDHASH_NOEXCEPT 
+  #define RAPIDHASH_NOEXCEPT
   #define RAPIDHASH_CONSTEXPR static const
   #ifndef RAPIDHASH_INLINE
     #define RAPIDHASH_INLINE static inline
@@ -66,7 +66,7 @@
 
 /*
  *  Protection macro, alters behaviour of rapid_mum multiplication function.
- *  
+ *
  *  RAPIDHASH_FAST: Normal behavior, max speed.
  *  RAPIDHASH_PROTECTED: Extra protection against entropy loss.
  */
@@ -78,7 +78,7 @@
 
 /*
  *  Unrolling macros, changes code definition for main hash function.
- *  
+ *
  *  RAPIDHASH_COMPACT: Legacy variant, each loop process 48 bytes.
  *  RAPIDHASH_UNROLLED: Unrolled variant, each loop process 96 bytes.
  *
@@ -129,7 +129,7 @@ RAPIDHASH_CONSTEXPR uint64_t rapid_secret[3] = {0x2d358dccaa6c78a5ull, 0x8bb84b9
 
 /*
  *  64*64 -> 128bit multiply function.
- *  
+ *
  *  @param A  Address of 64-bit number.
  *  @param B  Address of 64-bit number.
  *
@@ -145,7 +145,7 @@ RAPIDHASH_CONSTEXPR uint64_t rapid_secret[3] = {0x2d358dccaa6c78a5ull, 0x8bb84b9
  */
 RAPIDHASH_INLINE void rapid_mum(uint64_t *A, uint64_t *B) RAPIDHASH_NOEXCEPT {
 #if defined(__SIZEOF_INT128__)
-  __uint128_t r=*A; r*=*B; 
+  __uint128_t r=*A; r*=*B;
   #ifdef RAPIDHASH_PROTECTED
   *A^=(uint64_t)r; *B^=(uint64_t)(r>>64);
   #else
@@ -186,7 +186,7 @@ RAPIDHASH_INLINE void rapid_mum(uint64_t *A, uint64_t *B) RAPIDHASH_NOEXCEPT {
 
 /*
  *  Multiply and xor mix function.
- *  
+ *
  *  @param A  64-bit number.
  *  @param B  64-bit number.
  *
@@ -226,8 +226,8 @@ RAPIDHASH_INLINE uint64_t rapid_read32(const uint8_t *p) RAPIDHASH_NOEXCEPT {
  *
  *  Always reads and combines 3 bytes from memory.
  *  Guarantees to read each buffer position at least once.
- *  
- *  Returns a 64-bit value containing all three bytes read. 
+ *
+ *  Returns a 64-bit value containing all three bytes read.
  */
 RAPIDHASH_INLINE uint64_t rapid_readSmall(const uint8_t *p, size_t k) RAPIDHASH_NOEXCEPT { return (((uint64_t)p[0])<<56)|(((uint64_t)p[k>>1])<<32)|p[k-1];}
 
@@ -244,7 +244,7 @@ RAPIDHASH_INLINE uint64_t rapid_readSmall(const uint8_t *p, size_t k) RAPIDHASH_
 RAPIDHASH_INLINE uint64_t rapidhash_internal(const void *key, size_t len, uint64_t seed, const uint64_t* secret) RAPIDHASH_NOEXCEPT {
   const uint8_t *p=(const uint8_t *)key; seed^=rapid_mix(seed^secret[0],secret[1])^len;  uint64_t  a,  b;
   if(_likely_(len<=16)){
-    if(_likely_(len>=4)){ 
+    if(_likely_(len>=4)){
       const uint8_t * plast = p + len - 4;
       a = (rapid_read32(p) << 32) | rapid_read32(plast);
       const uint64_t delta = ((len&24)>>(len>>3));
@@ -253,7 +253,7 @@ RAPIDHASH_INLINE uint64_t rapidhash_internal(const void *key, size_t len, uint64
     else a=b=0;
   }
   else{
-    size_t i=len; 
+    size_t i=len;
     if(_unlikely_(i>48)){
       uint64_t see1=seed, see2=seed;
 #ifdef RAPIDHASH_UNROLLED
