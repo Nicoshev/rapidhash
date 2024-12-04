@@ -73,4 +73,5 @@ The provided default seed was used to produce rapidhash results.
 Ports
 -------------------------
 [Rust](https://github.com/hoxxep/rapidhash) by hoxxep  
+[Python](https://github.com/ryan-aoi/rapidhash) by ryan-aoi  
 [TypeScript](https://github.com/komiya-atsushi/rapidhash-js) by KOMIYA Atsushi
