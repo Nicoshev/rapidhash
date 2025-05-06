@@ -259,7 +259,7 @@ RAPIDHASH_INLINE uint64_t rapid_read32(const uint8_t *p) RAPIDHASH_NOEXCEPT {
       a = b = 0;
   } else {
     size_t i = len;
-    if (len >= 48) {
+    if (_likely_(len >= 48)) {
       uint64_t see1 = seed, see2 = seed;
       uint64_t see3 = seed, see4 = seed;
       uint64_t see5 = seed, see6 = seed;
