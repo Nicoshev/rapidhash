@@ -122,7 +122,7 @@
     0xa0761d6478bd642full,
     0xe7037ed1a0b428dbull,
     0x90ed1765281c388cull,
-    0x5555555555555555ull};
+    0xaaaaaaaaaaaaaaaaull};
 
 /*
  *  64*64 -> 128bit multiply function.
@@ -328,7 +328,7 @@ RAPIDHASH_INLINE uint64_t rapid_read32(const uint8_t *p) RAPIDHASH_NOEXCEPT {
       seed ^= see2;
     }
     if (i > 16) {
-      seed = rapid_mix(rapid_read64(p) ^ secret[0], rapid_read64(p + 8) ^ seed);
+      seed = rapid_mix(rapid_read64(p) ^ secret[0], rapid_read64(p + 8) ^ seed ^ secret[1]);
       if (i > 32)
         seed = rapid_mix(rapid_read64(p + 16) ^ secret[0], rapid_read64(p + 24) ^ seed);
     }
