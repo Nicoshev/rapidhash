@@ -52,10 +52,10 @@ Outstanding performance on aarch64 systems
 
 Peak throughput when hashing files of 16Kb-2Mb
 
-| Hash      | M1 Pro | Neoverse V2 |
-| ---       | ---    | ---         |
-| rapidhash | 47GB/s | 37GB/s      |
-| xxh3      | 37GB/s | 34GB/s      |
+| Hash      | M1 Pro | M3 Pro | Neoverse V2 |
+| ---       | ---    | ---    | ---         |
+| rapidhash | 47GB/s | 57GB/s | 37GB/s      |
+| xxh3      | 37GB/s | 43GB/s | 34GB/s      |
 
 Collision-based hash quality study
 -------------------------
