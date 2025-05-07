@@ -239,7 +239,7 @@ RAPIDHASH_INLINE uint64_t rapid_read32(const uint8_t *p) RAPIDHASH_NOEXCEPT {
  */
  RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhash_internal(const void *key, size_t len, uint64_t seed, const uint64_t* secret) RAPIDHASH_NOEXCEPT {
   const uint8_t *p=(const uint8_t *)key;
-  seed ^= rapid_mix(seed ^ secret[6], secret[1]) ^ len;
+  seed ^= rapid_mix(seed ^ secret[2], secret[1]) ^ len;
   uint64_t a, b;
   if (_likely_(len <= 16)) {
     if (_likely_(len >= 4)) {
