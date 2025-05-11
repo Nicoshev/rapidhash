@@ -7,22 +7,22 @@ The fastest passing hash in [SMHasher3](https://gitlab.com/fwojcik/smhasher3/-/b
 
 rapidhash is [wyhash](https://github.com/wangyi-fudan/wyhash)' official successor, with improved speed, quality and compatibility.
 
-**Fast**
-Extremely fast for both short and large inputs.
-Surpasses [70GB/s](https://github.com/Nicoshev/rapidhash/tree/master?tab=readme-ov-file#outstanding-performance) on Apple's M4 cpus.
-The fastest hash function passing all tests in [SMHasher](https://github.com/rurban/smhasher?tab=readme-ov-file#smhasher).
-The fastest hash function passing all tests in [SMHasher3](https://gitlab.com/fwojcik/smhasher3/-/blob/main/results/README.md#passing-hashes).
+**Fast**  
+Extremely fast for both short and large inputs.  
+Surpasses [70GB/s](https://github.com/Nicoshev/rapidhash/tree/master?tab=readme-ov-file#outstanding-performance) on Apple's M4 cpus.  
+The fastest hash function passing all tests in [SMHasher](https://github.com/rurban/smhasher?tab=readme-ov-file#smhasher).  
+The fastest hash function passing all tests in [SMHasher3](https://gitlab.com/fwojcik/smhasher3/-/blob/main/results/README.md#passing-hashes).  
 About 6% higher throughput than wyhash according to SMHasher and SMHasher3 reports.
 
-**Universal**
-Optimized for both AMD64 and AArch64 systems.
-Compatible with gcc, clang, icx and MSVC.
-It does not use machine-specific vectorized or cryptographic instruction sets.
+**Universal**  
+Optimized for both AMD64 and AArch64 systems.  
+Compatible with gcc, clang, icx and MSVC.  
+It does not use machine-specific vectorized or cryptographic instruction sets.  
 Prepared for both C and C++ compilation.
 
-**Excellent**
-Passes all tests in both [SMHasher](https://github.com/rurban/smhasher/blob/master/doc/rapidhash.txt) and [SMHasher3](https://gitlab.com/fwojcik/smhasher3/-/blob/main/results/raw/rapidhash.txt).
-[Collision-based study](https://github.com/Nicoshev/rapidhash/tree/master?tab=readme-ov-file#collision-based-hash-quality-study) showed a collision probability lower than wyhash and close to ideal.
+**Excellent**  
+Passes all tests in both [SMHasher](https://github.com/rurban/smhasher/blob/master/doc/rapidhash.txt) and [SMHasher3](https://gitlab.com/fwojcik/smhasher3/-/blob/main/results/raw/rapidhash.txt).  
+[Collision-based study](https://github.com/Nicoshev/rapidhash/tree/master?tab=readme-ov-file#collision-based-hash-quality-study) showed a collision probability lower than wyhash and close to ideal.  
 Outstanding collision ratio when tested with datasets of 16B and 66B keys:
 
 | Input Len | Nb Hashes | Expected | Nb Collisions |
