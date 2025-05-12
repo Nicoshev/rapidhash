@@ -86,7 +86,7 @@ In the case of hashing $15*2^{30}$ (~16.1B) different keys, we should expect to 
 
 We present an experiment in which we use rapidhash to hash $77$ datasets of $15*2^{30}$ (15Gi) keys each.  
 For each dataset, the amount of collisions produced is recorded as measurement.  
-Ideally, the average among measurements should be $7.031$ and its distribution should approximate to being binomial.  
+Ideally, the average among measurements should be $7.031$ and the results collection should be a binomial distribution.  
 We obtained a mean value of $8.026$, just $14$% over $7.031$.  
 Each dataset individual result and the collisions test program can be found in the [collisions folder](https://github.com/Nicoshev/rapidhash/tree/master/collisions).  
 The default seed $0$ was used in all experiments.
