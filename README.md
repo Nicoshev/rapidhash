@@ -59,8 +59,8 @@ Average latency when hashing keys of 4, 8 and 16 bytes
 
 | Hash      | M1 Pro | Core 5 226V | Ryzen 9700X | Neoverse V2 | AMD Turin |
 | ---       | ---    | ---         | ---         | ---         | ---       |
-| rapidhash | 1.75us |             |             | 1.73us      | 2.21us    |
-| xxh3      | 1.90us |             |             | 1.99us      | 2.30us    |
+| rapidhash | 1.75ns |             |             | 1.73ns      | 2.21ns    |
+| xxh3      | 1.90ns |             |             | 1.99ns      | 2.30ns    |
 
 Peak throughput when hashing files of 16Kb-2Mb
 
