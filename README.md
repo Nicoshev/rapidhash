@@ -56,19 +56,23 @@ More results can be found in the [collisions folder](https://github.com/Nicoshev
 Outstanding performance
 -------------------------
 
+Average latency when hashing keys of 4, 8 and 16 bytes
+
+| Hash      | M1 Pro | Core 5 226V | Ryzen 9700X | Neoverse V2 | AMD Turin |
+| ---       | ---    | ---         | ---         | ---         | ---       |
+| rapidhash | 1.75us |             |             | 1.73us      | 2.21us    |
+| xxh3      | 1.90us |             |             | 1.99us      | 2.30us    |
+
 Peak throughput when hashing files of 16Kb-2Mb
 
-| Hash      | M1 Pro | M3 Pro | M3 Ultra | M4     | Neoverse V2 | AMD Turin |
-| ---       | ---    | ---    | ---      | ---    | ---         | ---       |
-| rapidhash | 47GB/s | 57GB/s | 61GB/s   | 71GB/s | 38GB/s      | 36GB/s    |
-| xxh3      | 37GB/s | 43GB/s | 47GB/s   | 49GB/s | 34GB/s      | 58GB/s    |
+| Hash      | M1 Pro | M3 Pro | M3 Ultra | M4     | Neoverse V2 |
+| ---       | ---    | ---    | ---      | ---    | ---         |
+| rapidhash | 47GB/s | 57GB/s | 61GB/s   | 71GB/s | 38GB/s      |
+| xxh3      | 37GB/s | 43GB/s | 47GB/s   | 49GB/s | 34GB/s      |
 
-Peak throughput when hashing files of 4Mb-128Mb
 
-| Hash      | AMD Turin |
-| ---       | ---       |
-| rapidhash | 35GB/s    |
-| xxh3      | 37GB/s    |
+Folly's hash benchmark was used to measure short-input performance.
+Large-input speed benchmarking program can be found in the [bench folder](https://github.com/Nicoshev/rapidhash/tree/master/bench)
 
 Collision-based hash quality study
 -------------------------
@@ -81,14 +85,9 @@ If we compute $n$ hashes, the expected amount of collisions should be the number
 This should be $(n*(n-1))/2 * 1/2^{64}$, or simplified: $(n*(n-1))/2^{65}$.
 In the case of hashing $15*2^{30}$ (~16.1B) different keys, we should expect to see $7.03$ collisions.
 
-We present an experiment in which we use rapidhash to hash $76$ datasets of $15*2^{30}$ (15Gi) keys each.
+We present an experiment in which we use rapidhash to hash $77$ datasets of $15*2^{30}$ (15Gi) keys each.
 For each dataset, the amount of collisions produced is recorded as measurement.
-Ideally, the average among measurements should be $7.031$ and its histogram should approximate a binomial distribution.
+Ideally, the average among measurements should be $7.031$ and its distribution should approximate to being binomial.
 We obtained a mean value of $8.026$, just $14$% over $7.031$.
-The results histogram, depicted below, does resemble a slightly inclined binomial distribution:
-
-![rapidhash, collisions, histogram](https://github.com/Nicoshev/rapidhash/assets/127915393/fc4c7c76-69b3-4d68-908b-f3e8723a32bb)
-
 Each dataset individual result and the collisions test program can be found in the [collisions folder](https://github.com/Nicoshev/rapidhash/tree/master/collisions).
-The same datasets were hashed using wyhash, yielding a higher mean collision value of $8.06$
 The default seed $0$ was used in all experiments.
