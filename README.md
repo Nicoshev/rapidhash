@@ -70,7 +70,7 @@ Peak throughput when hashing files of 16Kb-2Mb
 | xxh3      | 37GB/s | 43GB/s | 47GB/s   | 49GB/s | 34GB/s      |
 
 
-Benchmarking program can be found in the [bench folder](https://github.com/Nicoshev/rapidhash/tree/master/bench)
+The benchmarking program can be found in the [bench folder](https://github.com/Nicoshev/rapidhash/tree/master/bench)
 
 Collision-based hash quality study
 -------------------------
