@@ -425,18 +425,36 @@ RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhash_internal(const void *key, size_t l
 }
 
 /*
+ *  rapidhash hash function, requires a pre-mixed seed.
+ *
+ *  The user is expected to have generated the seed truly randomly, or used `seed = rapid_preseed(seed)` manually.
+ *  Sequential seeds are not recommended, as they can lead to similar hash results.
+ *
+ *  @param key     Buffer to be hashed.
+ *  @param len     @key length, in bytes.
+ *  @param seed    64-bit _pre-mixed_ seed used to alter the hash result predictably.
+ *
+ *  Returns a 64-bit hash.
+ */
+RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhash_prepared(const void *key, size_t len, uint64_t premixed_seed) RAPIDHASH_NOEXCEPT {
+  return rapidhash_internal(key, len, premixed_seed, rapid_secret);
+}
+
+/*
  *  rapidhash default seeded hash function.
  *
  *  @param key     Buffer to be hashed.
  *  @param len     @key length, in bytes.
  *  @param seed    64-bit seed used to alter the hash result predictably.
  *
- *  Calls rapidhash_internal using provided parameters and default secrets.
+ *  Reseeds the given seed with `rapid_preseed(seed)` to avoid similarity between seeds, and then calls
+ *  rapidhash_prepared using provided parameters and default secrets.
  *
  *  Returns a 64-bit hash.
  */
 RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhash_withSeed(const void *key, size_t len, uint64_t seed) RAPIDHASH_NOEXCEPT {
-  return rapidhash_internal(key, len, seed, rapid_secret);
+  seed = rapid_preseed(seed);
+  return rapidhash_prepared(key, len, seed);
 }
 
 /*
@@ -445,10 +463,10 @@ RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhash_withSeed(const void *key, size_t l
  *  @param key     Buffer to be hashed.
  *  @param len     @key length, in bytes.
  *
- *  Calls rapidhash_withSeed using provided parameters and the default seed.
+ *  Calls rapidhash_prepared using provided parameters and the default pre-mixed seed.
  *
  *  Returns a 64-bit hash.
  */
 RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhash(const void *key, size_t len) RAPIDHASH_NOEXCEPT {
-  return rapidhash_withSeed(key, len, RAPID_SEED);
+  return rapidhash_prepared(key, len, RAPID_SEED);
 }
