@@ -130,6 +130,11 @@
  #endif
 
  /*
+  *  Default seed.
+  */
+ #define RAPID_SEED (0xbdd89aa982704029ull)
+
+ /*
   *  Default secret parameters.
   */
    RAPIDHASH_CONSTEXPR uint64_t rapid_secret[8] = {
@@ -445,5 +450,5 @@ RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhash_withSeed(const void *key, size_t l
  *  Returns a 64-bit hash.
  */
 RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhash(const void *key, size_t len) RAPIDHASH_NOEXCEPT {
-  return rapidhash_withSeed(key, len, 0);
+  return rapidhash_withSeed(key, len, RAPID_SEED);
 }
