@@ -74,8 +74,12 @@
  # define RAPIDHASH_INLINE_CONSTEXPR RAPIDHASH_INLINE
  #endif
 
- #ifdef __has_attribute(no_inline)
- # define RAPIDHASH_NO_INLINE __attribute__((noinline))
+ #ifdef __has_attribute
+ # if __has_attribute(noinline)
+ #  define RAPIDHASH_NO_INLINE __attribute__((noinline))
+ # else
+ #  define RAPIDHASH_NO_INLINE
+ # endif
  #else
  # define RAPIDHASH_NO_INLINE
  #endif
