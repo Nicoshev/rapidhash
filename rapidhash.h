@@ -73,6 +73,21 @@
  # endif
  # define RAPIDHASH_INLINE_CONSTEXPR RAPIDHASH_INLINE
  #endif
+
+ /*
+  *  Small input speed macro, improves small input speed at the expense of sacrificing large input speed.
+  *
+  *  RAPIDHASH_UNROLLED: Normal behavior, max large input speed.
+  *  RAPIDHASH_COMPACT: Improved small input speed.
+  */
+  #ifndef RAPIDHASH_COMPACT
+  # define RAPIDHASH_UNROLLED
+  # define RAPIDHASH_UNLIKELY_BULK(x) _unlikely_(x)
+  #elif defined(RAPIDHASH_UNROLLED)
+  # error "cannot define RAPIDHASH_COMPACT and RAPIDHASH_UNROLLED simultaneously."
+  #else
+  # define RAPIDHASH_UNLIKELY_BULK(x) (x)
+  #endif
  
  /*
   *  Protection macro, alters behaviour of rapid_mum multiplication function.
@@ -257,12 +272,12 @@ RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhash_internal(const void *key, size_t l
       b = 0;
     } else
       a = b = 0;
-  } else if (_likely_(len <= 56)) {
+  } else if (_likely_(len <= 64)) {
     seed = rapid_mix(rapid_read64(p) ^ secret[0], rapid_read64(p + 8) ^ seed);
     if (len > 32) {
       seed = rapid_mix(rapid_read64(p + 16) ^ secret[1], rapid_read64(p + 24) ^ seed);
       if (len > 48) {
-        seed = rapid_mix(rapid_read64(p + 32) ^ secret[0], rapid_read64(p + 40) ^ seed);
+        seed = rapid_mix(rapid_read64(p + 32) ^ secret[1], rapid_read64(p + 40) ^ seed);
       }
     }
     a=rapid_read64(p+len-16);  b=rapid_read64(p+len-8);
@@ -271,6 +286,7 @@ RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhash_internal(const void *key, size_t l
     uint64_t see1 = seed, see2 = seed;
     uint64_t see3 = seed, see4 = seed;
     uint64_t see5 = seed, see6 = seed;
+#ifdef RAPIDHASH_UNROLLED
     while (_likely_(i >= 224)) {
       seed = rapid_mix(rapid_read64(p) ^ secret[0], rapid_read64(p + 8) ^ seed);
       see1 = rapid_mix(rapid_read64(p + 16) ^ secret[1], rapid_read64(p + 24) ^ see1);
@@ -300,6 +316,19 @@ RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhash_internal(const void *key, size_t l
       p += 112;
       i -= 112;
     }
+#else
+    while (i >= 112) {
+      seed = rapid_mix(rapid_read64(p) ^ secret[0], rapid_read64(p + 8) ^ seed);
+      see1 = rapid_mix(rapid_read64(p + 16) ^ secret[1], rapid_read64(p + 24) ^ see1);
+      see2 = rapid_mix(rapid_read64(p + 32) ^ secret[2], rapid_read64(p + 40) ^ see2);
+      see3 = rapid_mix(rapid_read64(p + 48) ^ secret[3], rapid_read64(p + 56) ^ see3);
+      see4 = rapid_mix(rapid_read64(p + 64) ^ secret[4], rapid_read64(p + 72) ^ see4);
+      see5 = rapid_mix(rapid_read64(p + 80) ^ secret[5], rapid_read64(p + 88) ^ see5);
+      see6 = rapid_mix(rapid_read64(p + 96) ^ secret[6], rapid_read64(p + 104) ^ see6);
+      p += 112;
+      i -= 112;
+    }
+#endif
     if (_likely_(i >= 48)) {
       seed = rapid_mix(rapid_read64(p) ^ secret[0], rapid_read64(p + 8) ^ seed);
       see1 = rapid_mix(rapid_read64(p + 16) ^ secret[1], rapid_read64(p + 24) ^ see1);
@@ -322,7 +351,7 @@ RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhash_internal(const void *key, size_t l
     seed ^= see3;
     if ((i > 16)) {
       seed = rapid_mix(rapid_read64(p) ^ secret[2], rapid_read64(p + 8) ^ seed);
-      if (_unlikely_(i > 32))
+      if (RAPIDHASH_UNLIKELY_BULK(i > 32))
         seed = rapid_mix(rapid_read64(p + 16) ^ secret[2], rapid_read64(p + 24) ^ seed);
     }
     a=rapid_read64(p+i-16);  b=rapid_read64(p+i-8);
