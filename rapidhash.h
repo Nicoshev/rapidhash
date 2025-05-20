@@ -74,12 +74,12 @@
  # define RAPIDHASH_INLINE_CONSTEXPR RAPIDHASH_INLINE
  #endif
 
- #ifdef __has_attribute
- # if __has_attribute(noinline)
- #  define RAPIDHASH_NO_INLINE __attribute__((noinline))
- # else
- #  define RAPIDHASH_NO_INLINE
- # endif
+ #if defined(_MSC_VER)
+ # define RAPIDHASH_NO_INLINE __declspec(noinline)
+ #elif defined(__GNUC__) || defined(__clang__) || defined(__INTEL_COMPILER)
+ # define RAPIDHASH_NO_INLINE __attribute__((noinline))
+ #elif defined(__has_attribute) && __has_attribute(noinline)
+ # define RAPIDHASH_NO_INLINE __attribute__((noinline))
  #else
  # define RAPIDHASH_NO_INLINE
  #endif
