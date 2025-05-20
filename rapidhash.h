@@ -1,5 +1,5 @@
 /*
- * rapidhash V2 - Very fast, high quality, platform-independent hashing algorithm.
+ * rapidhash V2.1 - Very fast, high quality, platform-independent hashing algorithm.
  * Copyright (C) 2025 Nicolas De Carli
  *
  * Based on 'wyhash', by Wang Yi <godspeed_china@yeah.net>
