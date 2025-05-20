@@ -44,11 +44,11 @@
  #   pragma intrinsic(_umul128)
  # endif
  #endif
- 
+
  /*
   *  C/C++ macros.
   */
- 
+
  #ifdef _MSC_VER
  # define RAPIDHASH_ALWAYS_INLINE __forceinline
  #elif defined(__GNUC__)
@@ -141,7 +141,7 @@
  # define _likely_(x) (x)
  # define _unlikely_(x) (x)
  #endif
- 
+
  /*
   *  Endianness macros.
   */
@@ -155,7 +155,12 @@
  #   define RAPIDHASH_LITTLE_ENDIAN
  # endif
  #endif
- 
+
+ /*
+  *  Default seed.
+  */
+ #define RAPID_SEED (0xbdd89aa982704029ull)
+
  /*
   *  Default secret parameters.
   */
@@ -168,7 +173,7 @@
      0xe7037ed1a0b428dbull,
      0x90ed1765281c388cull,
      0xaaaaaaaaaaaaaaaaull};
- 
+
  /*
   *  64*64 -> 128bit multiply function.
   *
@@ -225,7 +230,7 @@
    #endif
  #endif
  }
- 
+
  /*
   *  Multiply and xor mix function.
   *
@@ -236,7 +241,7 @@
   *  Returns 64-bit xor between high and low 64 bits of C.
   */
   RAPIDHASH_INLINE_CONSTEXPR uint64_t rapid_mix(uint64_t A, uint64_t B) RAPIDHASH_NOEXCEPT { rapid_mum(&A,&B); return A^B; }
- 
+
  /*
   *  Read functions.
   */
@@ -360,6 +365,8 @@ RAPIDHASH_CONSTEXPR RAPIDHASH_NO_INLINE uint64_t rapidhash_internal_cold(const u
     if (RAPIDHASH_UNLIKELY_BULK(i > 32))
       seed = rapid_mix(rapid_read64(p + 16) ^ secret[2], rapid_read64(p + 24) ^ seed);
   }
+
+  uint64_t a, b;
   a=rapid_read64(p+i-16);  b=rapid_read64(p+i-8);
 
   a ^= secret[1];
@@ -373,19 +380,19 @@ RAPIDHASH_CONSTEXPR RAPIDHASH_NO_INLINE uint64_t rapidhash_internal_cold(const u
   #endif
 }
 
- /*
-  *  rapidhash main function.
-  *
-  *  @param key     Buffer to be hashed.
-  *  @param len     @key length, in bytes.
-  *  @param seed    64-bit seed used to alter the hash result predictably.
-  *  @param secret  Triplet of 64-bit secrets used to alter hash result predictably.
-  *
-  *  Returns a 64-bit hash.
-  */
+/*
+ *  rapidhash main function.
+ *
+ *  @param key     Buffer to be hashed.
+ *  @param len     @key length, in bytes.
+ *  @param seed    64-bit seed used to alter the hash result predictably.
+ *  @param secret  Triplet of 64-bit secrets used to alter hash result predictably.
+ *
+ *  Returns a 64-bit hash.
+ */
 RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhash_internal(const void *key, size_t len, uint64_t seed, const uint64_t* secret) RAPIDHASH_NOEXCEPT {
   const uint8_t *p=(const uint8_t *)key;
-  seed ^= rapid_mix(seed ^ secret[2], secret[1]) ^ len;
+  seed ^= len;
   uint64_t a, b;
   if (_likely_(len <= 16)) {
     if (_likely_(len >= 4)) {
@@ -403,36 +410,29 @@ RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhash_internal(const void *key, size_t l
       b = p[len>>1];
     } else
       a = b = 0;
-  } else if (len <= 64) {
-    // input len [16, 64]
-    seed = rapid_mix(rapid_read64(p) ^ secret[0], rapid_read64(p + 8) ^ seed);
-    if ((len > 32)) {
-      seed = rapid_mix(rapid_read64(p + 16) ^ secret[1], rapid_read64(p + 24) ^ seed);
-      if (len > 48) {
-        seed = rapid_mix(rapid_read64(p + 32) ^ secret[0], rapid_read64(p + 40) ^ seed);
-      }
-    }
-    a=rapid_read64(p+len-16);  b=rapid_read64(p+len-8);
   } else if (len <= 288) {
     // input len [65, 288] — using the original rapidhash V1 logic
     size_t i = len;
-    uint64_t see1=seed, see2=seed;
-    while(_likely_(i>=96)){
-      seed=rapid_mix(rapid_read64(p)^secret[0],rapid_read64(p+8)^seed);
-      see1=rapid_mix(rapid_read64(p+16)^secret[1],rapid_read64(p+24)^see1);
-      see2=rapid_mix(rapid_read64(p+32)^secret[2],rapid_read64(p+40)^see2);
-      seed=rapid_mix(rapid_read64(p+48)^secret[0],rapid_read64(p+56)^seed);
-      see1=rapid_mix(rapid_read64(p+64)^secret[1],rapid_read64(p+72)^see1);
-      see2=rapid_mix(rapid_read64(p+80)^secret[2],rapid_read64(p+88)^see2);
-      p+=96; i-=96;
+
+    if (i > 48) {
+      uint64_t see1=seed, see2=seed;
+      while(_likely_(i>=96)){
+        seed=rapid_mix(rapid_read64(p)^secret[0],rapid_read64(p+8)^seed);
+        see1=rapid_mix(rapid_read64(p+16)^secret[1],rapid_read64(p+24)^see1);
+        see2=rapid_mix(rapid_read64(p+32)^secret[2],rapid_read64(p+40)^see2);
+        seed=rapid_mix(rapid_read64(p+48)^secret[0],rapid_read64(p+56)^seed);
+        see1=rapid_mix(rapid_read64(p+64)^secret[1],rapid_read64(p+72)^see1);
+        see2=rapid_mix(rapid_read64(p+80)^secret[2],rapid_read64(p+88)^see2);
+        p+=96; i-=96;
+      }
+      if(_unlikely_(i>=48)){
+        seed=rapid_mix(rapid_read64(p)^secret[0],rapid_read64(p+8)^seed);
+        see1=rapid_mix(rapid_read64(p+16)^secret[1],rapid_read64(p+24)^see1);
+        see2=rapid_mix(rapid_read64(p+32)^secret[2],rapid_read64(p+40)^see2);
+        p+=48; i-=48;
+      }
+      seed^=see1^see2;
     }
-    if(_unlikely_(i>=48)){
-      seed=rapid_mix(rapid_read64(p)^secret[0],rapid_read64(p+8)^seed);
-      see1=rapid_mix(rapid_read64(p+16)^secret[1],rapid_read64(p+24)^see1);
-      see2=rapid_mix(rapid_read64(p+32)^secret[2],rapid_read64(p+40)^see2);
-      p+=48; i-=48;
-    }
-    seed^=see1^see2;
     if(i>16){
       seed=rapid_mix(rapid_read64(p)^secret[2],rapid_read64(p+8)^seed^secret[1]);
       if(i>32)
@@ -449,7 +449,7 @@ RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhash_internal(const void *key, size_t l
 
   #ifdef RAPIDHASH_AVALANCHE
     rapid_mum(&a, &b);
-    return rapid_mix(a ^ secret[7] ^ len, b ^ secret[1]);
+    return rapid_mix(a ^ secret[7] ^ seed, b ^ secret[1]);
   #else
     return rapid_mix(a ^ len, b);
   #endif
@@ -470,7 +470,7 @@ RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhash_internal(const void *key, size_t l
 RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhash_prepared(const void *key, size_t len, uint64_t premixed_seed) RAPIDHASH_NOEXCEPT {
   return rapidhash_internal(key, len, premixed_seed, rapid_secret);
 }
- 
+
 /*
  *  rapidhash default seeded hash function.
  *
