@@ -66,7 +66,7 @@ Peak throughput when hashing files of 16Kb-2Mb
 
 | Hash      | M1 Pro | M3 Pro | M3 Ultra | M4     | Neoverse V2 |
 | ---       | ---    | ---    | ---      | ---    | ---         |
-| rapidhash | 47GB/s | 57GB/s | 61GB/s   | 71GB/s | 37GB/s      |
+| rapidhash | 47GB/s | 57GB/s | 61GB/s   | 71GB/s | 38GB/s      |
 | xxh3      | 37GB/s | 43GB/s | 47GB/s   | 49GB/s | 34GB/s      |
 
 
