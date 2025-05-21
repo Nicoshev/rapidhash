@@ -369,6 +369,7 @@ RAPIDHASH_CONSTEXPR RAPIDHASH_NO_INLINE uint64_t rapidhash_internal_cold(const u
   uint64_t a, b;
   a=rapid_read64(p+i-16);  b=rapid_read64(p+i-8);
 
+  seed += len;
   a ^= secret[1];
   b ^= seed;
 
@@ -393,7 +394,7 @@ RAPIDHASH_CONSTEXPR RAPIDHASH_NO_INLINE uint64_t rapidhash_internal_cold(const u
  */
 RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhash_internal(const void *key, size_t len, uint64_t seed, const uint64_t* secret) RAPIDHASH_NOEXCEPT {
   const uint8_t *p=(const uint8_t *)key;
-  seed += len;
+
   uint64_t a, b;
   if (_likely_(len <= 16)) {
     if (_likely_(len >= 4)) {
@@ -445,6 +446,7 @@ RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhash_internal(const void *key, size_t l
     return rapidhash_internal_cold(p, len, seed, secret);
   }
 
+  seed += len;
   a ^= secret[1];
   b ^= seed;
 
