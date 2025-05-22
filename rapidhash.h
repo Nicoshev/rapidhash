@@ -253,7 +253,7 @@ RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhash_internal(const void *key, size_t l
   seed ^= rapid_mix(seed ^ secret[2], secret[1]) ^ len;
   uint64_t a, b;
   if (_likely_(len <= 16)) {
-    if (_likely_(len >= 4)) {
+    if ((len >= 4)) {
       if (len >= 8) {
         const uint8_t* plast = p + len - 8;
         a = rapid_read64(p);
@@ -263,27 +263,24 @@ RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhash_internal(const void *key, size_t l
         a = rapid_read32(p);
         b = rapid_read32(plast);
       }
-    } else if (_likely_(len > 0)) {
+    } else if ((len > 0)) {
       a = (((uint64_t)p[0])<<56)|p[len-1];
       b = p[len>>1];
     } else
       a = b = 0;
-  } else if (len <= 64) {
+  } /*else if (len < 112) {
     seed = rapid_mix(rapid_read64(p) ^ secret[0], rapid_read64(p + 8) ^ seed);
     if (len > 32) {
       seed = rapid_mix(rapid_read64(p + 16) ^ secret[1], rapid_read64(p + 24) ^ seed);
-      if (len > 48) {
-        seed = rapid_mix(rapid_read64(p + 32) ^ secret[1], rapid_read64(p + 40) ^ seed);
-      }
     }
     a=rapid_read64(p+len-16);  b=rapid_read64(p+len-8);
-  } else {
+  }*/ else {
     size_t i = len;
+#ifdef RAPIDHASH_UNROLLED
     uint64_t see1 = seed, see2 = seed;
     uint64_t see3 = seed, see4 = seed;
     uint64_t see5 = seed, see6 = seed;
-#ifdef RAPIDHASH_UNROLLED
-    if (_likely_(i >= 224)) {
+    if ((i >= 224)) {
       do {
           seed = rapid_mix(rapid_read64(p) ^ secret[0], rapid_read64(p + 8) ^ seed);
           see1 = rapid_mix(rapid_read64(p + 16) ^ secret[1], rapid_read64(p + 24) ^ see1);
@@ -303,7 +300,7 @@ RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhash_internal(const void *key, size_t l
           i -= 224;
       } while (_likely_(i >= 224));
     }
-    if (_likely_(i >= 112)) {
+    if ((i >= 112)) {
       seed = rapid_mix(rapid_read64(p) ^ secret[0], rapid_read64(p + 8) ^ seed);
       see1 = rapid_mix(rapid_read64(p + 16) ^ secret[1], rapid_read64(p + 24) ^ see1);
       see2 = rapid_mix(rapid_read64(p + 32) ^ secret[2], rapid_read64(p + 40) ^ see2);
@@ -314,53 +311,53 @@ RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhash_internal(const void *key, size_t l
       p += 112;
       i -= 112;
     }
-#else
-    while (i >= 112) {
-      seed = rapid_mix(rapid_read64(p) ^ secret[0], rapid_read64(p + 8) ^ seed);
-      see1 = rapid_mix(rapid_read64(p + 16) ^ secret[1], rapid_read64(p + 24) ^ see1);
-      see2 = rapid_mix(rapid_read64(p + 32) ^ secret[2], rapid_read64(p + 40) ^ see2);
-      see3 = rapid_mix(rapid_read64(p + 48) ^ secret[3], rapid_read64(p + 56) ^ see3);
-      see4 = rapid_mix(rapid_read64(p + 64) ^ secret[4], rapid_read64(p + 72) ^ see4);
-      see5 = rapid_mix(rapid_read64(p + 80) ^ secret[5], rapid_read64(p + 88) ^ see5);
-      see6 = rapid_mix(rapid_read64(p + 96) ^ secret[6], rapid_read64(p + 104) ^ see6);
-      p += 112;
-      i -= 112;
-    }
-#endif
-#ifndef RAPIDHASH_SUPER_COMPACT
-    if (_likely_(i >= 48)) {
-      seed = rapid_mix(rapid_read64(p) ^ secret[0], rapid_read64(p + 8) ^ seed);
-      see1 = rapid_mix(rapid_read64(p + 16) ^ secret[1], rapid_read64(p + 24) ^ see1);
-      see2 = rapid_mix(rapid_read64(p + 32) ^ secret[2], rapid_read64(p + 40) ^ see2);
-      p += 48;
-      i -= 48;
-      if (_likely_(i >= 48)) {
-        seed = rapid_mix(rapid_read64(p) ^ secret[0], rapid_read64(p + 8) ^ seed);
-        see1 = rapid_mix(rapid_read64(p + 16) ^ secret[1], rapid_read64(p + 24) ^ see1);
-        see2 = rapid_mix(rapid_read64(p + 32) ^ secret[2], rapid_read64(p + 40) ^ see2);
-        p += 48;
-        i -= 48;
-      }
-    }
-#else
-    while (_likely_(i >= 48)) {
-      seed = rapid_mix(rapid_read64(p) ^ secret[0], rapid_read64(p + 8) ^ seed);
-      see1 = rapid_mix(rapid_read64(p + 16) ^ secret[1], rapid_read64(p + 24) ^ see1);
-      see2 = rapid_mix(rapid_read64(p + 32) ^ secret[2], rapid_read64(p + 40) ^ see2);
-      p += 48;
-      i -= 48;
-    }
-#endif
-    see3 ^= see4;
-    see5 ^= see6;
     seed ^= see1;
-    see3 ^= see2;
-    seed ^= see5;
-    seed ^= see3;
+    see2 ^= see3;
+    see4 ^= see5;
+    seed ^= see6;
+    see2 ^= see4;
+    seed ^= see2;
+#else
+  if ((i >= 112)) {
+    uint64_t see1 = seed, see2 = seed;
+    uint64_t see3 = seed, see4 = seed;
+    uint64_t see5 = seed, see6 = seed;
+    do {
+      seed = rapid_mix(rapid_read64(p) ^ secret[0], rapid_read64(p + 8) ^ seed);
+      see1 = rapid_mix(rapid_read64(p + 16) ^ secret[1], rapid_read64(p + 24) ^ see1);
+      see2 = rapid_mix(rapid_read64(p + 32) ^ secret[2], rapid_read64(p + 40) ^ see2);
+      see3 = rapid_mix(rapid_read64(p + 48) ^ secret[3], rapid_read64(p + 56) ^ see3);
+      see4 = rapid_mix(rapid_read64(p + 64) ^ secret[4], rapid_read64(p + 72) ^ see4);
+      see5 = rapid_mix(rapid_read64(p + 80) ^ secret[5], rapid_read64(p + 88) ^ see5);
+      see6 = rapid_mix(rapid_read64(p + 96) ^ secret[6], rapid_read64(p + 104) ^ see6);
+      p += 112;
+      i -= 112;
+    } while((i >= 112));
+    seed ^= see1;
+    see2 ^= see3;
+    see4 ^= see5;
+    seed ^= see6;
+    see2 ^= see4;
+    seed ^= see2;
+  }
+#endif
     if (i > 16) {
-      seed = rapid_mix(rapid_read64(p) ^ secret[2], rapid_read64(p + 8) ^ seed);
-      if (RAPIDHASH_UNLIKELY_BULK(i > 32))
-        seed = rapid_mix(rapid_read64(p + 16) ^ secret[2], rapid_read64(p + 24) ^ seed);
+      seed = rapid_mix(rapid_read64(p) ^ secret[0], rapid_read64(p + 8) ^ seed);
+      if (i > 32) {
+          seed = rapid_mix(rapid_read64(p + 16) ^ secret[1], rapid_read64(p + 24) ^ seed);
+          if (i > 48) {
+              seed = rapid_mix(rapid_read64(p + 32) ^ secret[1], rapid_read64(p + 40) ^ seed);
+              if (i > 64) {
+                  seed = rapid_mix(rapid_read64(p + 48) ^ secret[0], rapid_read64(p + 56) ^ seed);
+                  if (i > 80) {
+                      seed = rapid_mix(rapid_read64(p + 64) ^ secret[0], rapid_read64(p + 72) ^ seed);
+                      if (i > 96) {
+                          seed = rapid_mix(rapid_read64(p + 80) ^ secret[1], rapid_read64(p + 88) ^ seed);
+                      }
+                  }
+              }
+          }
+      }
     }
     a=rapid_read64(p+i-16);  b=rapid_read64(p+i-8);
   }

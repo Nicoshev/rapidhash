@@ -65,6 +65,7 @@
  /* ===  xxHash  === */
  #define XXH_INLINE_ALL
  #include "xxhash.h"
+ #define RAPIDHASH_COMPACT
  #include "rapidhash.h"
 
 size_t rapidhash_wrapper(const void* src, size_t srcSize, void* dst, size_t dstCapacity, void* customPayload)
