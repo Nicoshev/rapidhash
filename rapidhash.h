@@ -255,14 +255,13 @@ RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhash_internal(const void *key, size_t l
   size_t i = len;
   if (_likely_(len <= 16)) {
     if ((len >= 4)) {
+      seed ^= len;
       if (len >= 8) {
         const uint8_t* plast = p + len - 8;
-        seed ^= len;
         b = rapid_read64(p);
         a = rapid_read64(plast);
       } else {
         const uint8_t* plast = p + len - 4;
-        seed ^= len;
         b = rapid_read32(p);
         a = rapid_read32(plast);
       }
@@ -271,13 +270,7 @@ RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhash_internal(const void *key, size_t l
       a = p[len>>1];
     } else
       a = b = 0;
-  } /*else if (len <= 48) {
-    seed = rapid_mix(rapid_read64(p) ^ secret[0], rapid_read64(p + 8) ^ seed);
-    if (len > 32) {
-      seed = rapid_mix(rapid_read64(p + 16) ^ secret[1], rapid_read64(p + 24) ^ seed);
-    }
-    a=rapid_read64(p+len-16) ^ len;  b=rapid_read64(p+len-8);
-  } */else {
+  } else {
 #ifdef RAPIDHASH_UNROLLED
     uint64_t see1 = seed, see2 = seed;
     uint64_t see3 = seed, see4 = seed;
@@ -344,17 +337,17 @@ RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhash_internal(const void *key, size_t l
   }
 #endif
     if (i > 16) {
-      seed = rapid_mix(rapid_read64(p) ^ secret[0], rapid_read64(p + 8) ^ seed);
+      seed = rapid_mix(rapid_read64(p) ^ secret[2], rapid_read64(p + 8) ^ seed);
       if (i > 32) {
           seed = rapid_mix(rapid_read64(p + 16) ^ secret[1], rapid_read64(p + 24) ^ seed);
           if (i > 48) {
               seed = rapid_mix(rapid_read64(p + 32) ^ secret[1], rapid_read64(p + 40) ^ seed);
               if (i > 64) {
-                  seed = rapid_mix(rapid_read64(p + 48) ^ secret[0], rapid_read64(p + 56) ^ seed);
+                  seed = rapid_mix(rapid_read64(p + 48) ^ secret[2], rapid_read64(p + 56) ^ seed);
                   if (i > 80) {
-                      seed = rapid_mix(rapid_read64(p + 64) ^ secret[0], rapid_read64(p + 72) ^ seed);
+                      seed = rapid_mix(rapid_read64(p + 64) ^ secret[1], rapid_read64(p + 72) ^ seed);
                       if (i > 96) {
-                          seed = rapid_mix(rapid_read64(p + 80) ^ secret[1], rapid_read64(p + 88) ^ seed);
+                          seed = rapid_mix(rapid_read64(p + 80) ^ secret[2], rapid_read64(p + 88) ^ seed);
                       }
                   }
               }
