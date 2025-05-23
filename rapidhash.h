@@ -266,8 +266,8 @@ RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhash_internal(const void *key, size_t l
         a = rapid_read32(plast);
       }
     } else if ((len > 0)) {
-      b = (((uint64_t)p[0])<<56)|p[len-1];
-      a = p[len>>1];
+      a = (((uint64_t)p[0])<<50)|p[len-1];
+      b = p[len>>1];
     } else
       a = b = 0;
   } else {
@@ -354,7 +354,7 @@ RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhash_internal(const void *key, size_t l
           }
       }
     }
-    a=rapid_read64(p+i-16) ^ i;  b=rapid_read64(p+i-8);
+    b=rapid_read64(p+i-16) ^ i;  a=rapid_read64(p+i-8);
   }
   a ^= secret[1];
   b ^= seed;
