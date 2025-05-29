@@ -32,7 +32,7 @@ They do not use machine-specific vectorized or cryptographic instruction sets.
 **Excellent**  
 All functions pass all tests in both [SMHasher](https://github.com/rurban/smhasher/blob/master/doc/rapidhash.txt) and [SMHasher3](https://gitlab.com/fwojcik/smhasher3/-/blob/main/results/raw/rapidhash.txt).  
 [Collision-based study](https://github.com/Nicoshev/rapidhash/tree/master?tab=readme-ov-file#collision-based-hash-quality-study) showed a collision probability close to ideal.  
-Outstanding collision ratio when tested with datasets of 16B keys:
+Outstanding collision ratio when tested with datasets of 16B and 67B keys:
 
 | Input Len | Nb Hashes | Expected | Nb Collisions |
 | ---  | ---   | ---   | --- |
@@ -47,6 +47,16 @@ Outstanding collision ratio when tested with datasets of 16B keys:
 |   96 | 15 Gi |   7.0 |   6 |
 |  120 | 15 Gi |   7.0 |   8 |
 |  128 | 15 Gi |   7.0 |   6 |
+|   12 | 62 Gi | 120.1 | 122 |
+|   16 | 62 Gi | 120.1 |  97 |
+|   24 | 62 Gi | 120.1 | 125 |
+|   32 | 62 Gi | 120.1 | 131 |
+|   40 | 62 Gi | 120.1 | 117 |
+|   48 | 62 Gi | 120.1 | 146 |
+|   64 | 62 Gi | 120.1 | 162 |
+|   80 | 62 Gi | 120.1 | 165 |
+|   96 | 62 Gi | 120.1 | 180 |
+|  120 | 62 Gi | 120.1 | 168 |
 
 More results can be found in the [collisions folder](https://github.com/Nicoshev/rapidhash/tree/master/collisions)
 
