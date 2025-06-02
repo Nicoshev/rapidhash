@@ -57,7 +57,7 @@
  # ifndef RAPIDHASH_INLINE
  #   define RAPIDHASH_INLINE RAPIDHASH_ALWAYS_INLINE
  # endif
- # if __cplusplus >= 201402L 
+ # if __cplusplus >= 201402L && !defined(_MSC_VER)
  #   define RAPIDHASH_INLINE_CONSTEXPR RAPIDHASH_ALWAYS_INLINE constexpr
  # else
  #   define RAPIDHASH_INLINE_CONSTEXPR RAPIDHASH_ALWAYS_INLINE
