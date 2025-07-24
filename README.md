@@ -103,4 +103,5 @@ The default seed $0$ was used in all experiments.
 
 Ports
 -------------------------
-[Java](https://github.com/dynatrace-oss/hash4j?tab=readme-ov-file#hash-algorithms) by hash4j
+[Java](https://github.com/dynatrace-oss/hash4j?tab=readme-ov-file#hash-algorithms) by hash4j  
+[Rust](https://github.com/hoxxep/rapidhash) by hoxxep    
