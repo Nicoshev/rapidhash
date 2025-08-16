@@ -73,15 +73,14 @@
 
  /*
   *  Unrolled macro.
-  *  Improves large input speed, but increases code size and worsens small input speed.
+  *  Improves large input speed but increases code size.
   *
-  *  RAPIDHASH_COMPACT: Normal behavior.
-  *  RAPIDHASH_UNROLLED: 
-  *
+  *  RAPIDHASH_UNROLLED: Extra loop unrolling (default).
+  *  RAPIDHASH_COMPACT: Reduced loop unrolling, slightly smaller code size.
   */
-  #ifndef RAPIDHASH_UNROLLED
-  # define RAPIDHASH_COMPACT
-  #elif defined(RAPIDHASH_COMPACT)
+  #ifndef RAPIDHASH_COMPACT
+  # define RAPIDHASH_UNROLLED
+  #elif defined(RAPIDHASH_UNROLLED)
   # error "cannot define RAPIDHASH_COMPACT and RAPIDHASH_UNROLLED simultaneously."
   #endif
  
@@ -261,7 +260,7 @@ RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhash_internal(const void *key, size_t l
     } else
       a = b = 0;
   } else {
-    if (len > 112) {
+    if (_unlikely_(len > 112)) {
       uint64_t see1 = seed, see2 = seed;
       uint64_t see3 = seed, see4 = seed;
       uint64_t see5 = seed, see6 = seed;
