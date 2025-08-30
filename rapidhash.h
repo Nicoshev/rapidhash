@@ -261,7 +261,7 @@ RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhash_internal(const void *key, size_t l
     } else
       a = b = 0;
   } else {
-    if (_unlikely_(len > 112)) {
+    if (len > 112) {
       uint64_t see1 = seed, see2 = seed;
       uint64_t see3 = seed, see4 = seed;
       uint64_t see5 = seed, see6 = seed;
@@ -564,3 +564,4 @@ RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhashMicro(const void *key, size_t len) 
 RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhashNano(const void *key, size_t len) RAPIDHASH_NOEXCEPT {
   return rapidhashNano_withSeed(key, len, 0);
 }
+
