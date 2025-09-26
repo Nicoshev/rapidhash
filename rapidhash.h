@@ -204,30 +204,48 @@
   *  Returns 64-bit xor between high and low 64 bits of C.
   */
   RAPIDHASH_INLINE_CONSTEXPR uint64_t rapid_mix(uint64_t A, uint64_t B) RAPIDHASH_NOEXCEPT { rapid_mum(&A,&B); return A^B; }
- 
- /*
-  *  Read functions.
-  */
- #ifdef RAPIDHASH_LITTLE_ENDIAN
- RAPIDHASH_INLINE uint64_t rapid_read64(const uint8_t *p) RAPIDHASH_NOEXCEPT { uint64_t v; memcpy(&v, p, sizeof(uint64_t)); return v;}
- RAPIDHASH_INLINE uint64_t rapid_read32(const uint8_t *p) RAPIDHASH_NOEXCEPT { uint32_t v; memcpy(&v, p, sizeof(uint32_t)); return v;}
- #elif defined(__GNUC__) || defined(__INTEL_COMPILER) || defined(__clang__)
- RAPIDHASH_INLINE uint64_t rapid_read64(const uint8_t *p) RAPIDHASH_NOEXCEPT { uint64_t v; memcpy(&v, p, sizeof(uint64_t)); return __builtin_bswap64(v);}
- RAPIDHASH_INLINE uint64_t rapid_read32(const uint8_t *p) RAPIDHASH_NOEXCEPT { uint32_t v; memcpy(&v, p, sizeof(uint32_t)); return __builtin_bswap32(v);}
- #elif defined(_MSC_VER)
- RAPIDHASH_INLINE uint64_t rapid_read64(const uint8_t *p) RAPIDHASH_NOEXCEPT { uint64_t v; memcpy(&v, p, sizeof(uint64_t)); return _byteswap_uint64(v);}
- RAPIDHASH_INLINE uint64_t rapid_read32(const uint8_t *p) RAPIDHASH_NOEXCEPT { uint32_t v; memcpy(&v, p, sizeof(uint32_t)); return _byteswap_ulong(v);}
- #else
- RAPIDHASH_INLINE uint64_t rapid_read64(const uint8_t *p) RAPIDHASH_NOEXCEPT {
-   uint64_t v; memcpy(&v, p, 8);
-   return (((v >> 56) & 0xff)| ((v >> 40) & 0xff00)| ((v >> 24) & 0xff0000)| ((v >>  8) & 0xff000000)| ((v <<  8) & 0xff00000000)| ((v << 24) & 0xff0000000000)| ((v << 40) & 0xff000000000000)| ((v << 56) & 0xff00000000000000));
- }
- RAPIDHASH_INLINE uint64_t rapid_read32(const uint8_t *p) RAPIDHASH_NOEXCEPT {
-   uint32_t v; memcpy(&v, p, 4);
-   return (((v >> 24) & 0xff)| ((v >>  8) & 0xff00)| ((v <<  8) & 0xff0000)| ((v << 24) & 0xff000000));
- }
- #endif
- 
+
+/*
+ * Helper methods for converting integers to little-endian bytes on big-endian platforms.
+ */
+#ifdef RAPIDHASH_LITTLE_ENDIAN
+RAPIDHASH_INLINE_CONSTEXPR uint16_t rapid_to_le_u16(const uint16_t v) RAPIDHASH_NOEXCEPT { return v; }
+RAPIDHASH_INLINE_CONSTEXPR uint32_t rapid_to_le_u32(const uint32_t v) RAPIDHASH_NOEXCEPT { return v; }
+RAPIDHASH_INLINE_CONSTEXPR uint64_t rapid_to_le_u64(const uint64_t v) RAPIDHASH_NOEXCEPT { return v; }
+#elif defined(__GNUC__) || defined(__INTEL_COMPILER) || defined(__clang__)
+RAPIDHASH_INLINE_CONSTEXPR uint16_t rapid_to_le_u16(const uint16_t v) RAPIDHASH_NOEXCEPT { return __builtin_bswap16(v); }
+RAPIDHASH_INLINE_CONSTEXPR uint32_t rapid_to_le_u32(const uint32_t v) RAPIDHASH_NOEXCEPT { return __builtin_bswap32(v); }
+RAPIDHASH_INLINE_CONSTEXPR uint64_t rapid_to_le_u64(const uint64_t v) RAPIDHASH_NOEXCEPT { return __builtin_bswap64(v); }
+#elif defined(_MSC_VER)
+RAPIDHASH_INLINE_CONSTEXPR uint16_t rapid_to_le_u16(const uint16_t v) RAPIDHASH_NOEXCEPT { return _byteswap_ushort(v); }
+RAPIDHASH_INLINE_CONSTEXPR uint32_t rapid_to_le_u32(const uint32_t v) RAPIDHASH_NOEXCEPT { return _byteswap_ulong(v); }
+RAPIDHASH_INLINE_CONSTEXPR uint64_t rapid_to_le_u64(const uint64_t v) RAPIDHASH_NOEXCEPT { return _byteswap_uint64(v); }
+#else
+RAPIDHASH_INLINE_CONSTEXPR uint16_t rapid_to_le_u16(const uint16_t v) RAPIDHASH_NOEXCEPT {
+  return ((v >> 8) & 0xff)| ((v << 8) & 0xff00);
+}
+RAPIDHASH_INLINE_CONSTEXPR uint32_t rapid_to_le_u32(const uint32_t v) RAPIDHASH_NOEXCEPT {
+  return (((v >> 24) & 0xff)| ((v >>  8) & 0xff00)| ((v <<  8) & 0xff0000)| ((v << 24) & 0xff000000));
+}
+RAPIDHASH_INLINE_CONSTEXPR uint64_t rapid_to_le_u64(const uint64_t v) RAPIDHASH_NOEXCEPT {
+  return (((v >> 56) & 0xff)| ((v >> 40) & 0xff00)| ((v >> 24) & 0xff0000)| ((v >>  8) & 0xff000000)| ((v <<  8) & 0xff00000000)| ((v << 24) & 0xff0000000000)| ((v << 40) & 0xff000000000000)| ((v << 56) & 0xff00000000000000));
+}
+#endif
+
+/*
+ * Read functions.
+ */
+RAPIDHASH_INLINE uint64_t rapid_read64(const uint8_t *p) RAPIDHASH_NOEXCEPT {
+  uint64_t v;
+  memcpy(&v, p, sizeof(uint64_t));
+  return rapid_to_le_u64(v);
+}
+RAPIDHASH_INLINE uint64_t rapid_read32(const uint8_t *p) RAPIDHASH_NOEXCEPT {
+  uint32_t v;
+  memcpy(&v, p, sizeof(uint32_t));
+  return rapid_to_le_u32(v);
+}
+
  /*
   *  rapidhash main function.
   *
@@ -566,25 +584,10 @@ RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhashNano(const void *key, size_t len) R
 }
 
 /*
- * Helper method for converting to little-endian bytes on big-endian platforms.
- */
-#ifndef RAPIDHASH_LITTLE_ENDIAN
-RAPIDHASH_INLINE_CONSTEXPR uint16_t rapidhash_to_le_u16(const uint16_t v) RAPIDHASH_NOEXCEPT { return __builtin_bswap16(v); }
-RAPIDHASH_INLINE_CONSTEXPR uint32_t rapidhash_to_le_u32(const uint32_t v) RAPIDHASH_NOEXCEPT { return __builtin_bswap32(v); }
-RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhash_to_le_u64(const uint64_t v) RAPIDHASH_NOEXCEPT { return __builtin_bswap64(v); }
-#else
-RAPIDHASH_INLINE_CONSTEXPR uint16_t rapidhash_to_le_u16(const uint16_t v) RAPIDHASH_NOEXCEPT { return v; }
-RAPIDHASH_INLINE_CONSTEXPR uint32_t rapidhash_to_le_u32(const uint32_t v) RAPIDHASH_NOEXCEPT { return v; }
-RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhash_to_le_u64(const uint64_t v) RAPIDHASH_NOEXCEPT { return v; }
-#endif
-
-/*
  *  rapidhash 8-bit integer hashing convenience function.
  *
  *  @param key     Integer to be hashed.
  *  @param seed    64-bit seed used to alter the hash result predictably.
- *
- *  Signed integers can safely be cast to their unsigned equivalent for hashing.
  */
 RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhash_uint8(const uint8_t key, const uint64_t seed) RAPIDHASH_NOEXCEPT {
   return rapidhashNano_withSeed(&key, 1, seed);
@@ -595,11 +598,9 @@ RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhash_uint8(const uint8_t key, const uin
  *
  *  @param key     Integer to be hashed.
  *  @param seed    64-bit seed used to alter the hash result predictably.
- *
- *  Signed integers can safely be cast to their unsigned equivalent for hashing.
  */
 RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhash_uint16(const uint16_t key, const uint64_t seed) RAPIDHASH_NOEXCEPT {
-  const uint16_t le = rapidhash_to_le_u16(key);
+  const uint16_t le = rapid_to_le_u16(key);
   return rapidhashNano_withSeed(&le, 2, seed);
 }
 
@@ -608,11 +609,9 @@ RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhash_uint16(const uint16_t key, const u
  *
  *  @param key     Integer to be hashed.
  *  @param seed    64-bit seed used to alter the hash result predictably.
- *
- *  Signed integers can safely be cast to their unsigned equivalent for hashing.
  */
 RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhash_uint32(const uint32_t key, const uint64_t seed) RAPIDHASH_NOEXCEPT {
-  const uint32_t le = rapidhash_to_le_u32(key);
+  const uint32_t le = rapid_to_le_u32(key);
   return rapidhashNano_withSeed(&le, 4, seed);
 }
 
@@ -621,10 +620,8 @@ RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhash_uint32(const uint32_t key, const u
  *
  *  @param key     Integer to be hashed.
  *  @param seed    64-bit seed used to alter the hash result predictably.
- *
- *  Signed integers can safely be cast to their unsigned equivalent for hashing.
  */
 RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhash_uint64(const uint64_t key, const uint64_t seed) RAPIDHASH_NOEXCEPT {
-  const uint64_t le = rapidhash_to_le_u64(key);
+  const uint64_t le = rapid_to_le_u64(key);
   return rapidhashNano_withSeed(&le, 8, seed);
 }
