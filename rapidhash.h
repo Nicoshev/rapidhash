@@ -565,3 +565,66 @@ RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhashNano(const void *key, size_t len) R
   return rapidhashNano_withSeed(key, len, 0);
 }
 
+/*
+ * Helper method for converting to little-endian bytes on big-endian platforms.
+ */
+#ifndef RAPIDHASH_LITTLE_ENDIAN
+RAPIDHASH_INLINE_CONSTEXPR uint16_t rapidhash_to_le_u16(const uint16_t v) RAPIDHASH_NOEXCEPT { return __builtin_bswap16(v); }
+RAPIDHASH_INLINE_CONSTEXPR uint32_t rapidhash_to_le_u32(const uint32_t v) RAPIDHASH_NOEXCEPT { return __builtin_bswap32(v); }
+RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhash_to_le_u64(const uint64_t v) RAPIDHASH_NOEXCEPT { return __builtin_bswap64(v); }
+#else
+RAPIDHASH_INLINE_CONSTEXPR uint16_t rapidhash_to_le_u16(const uint16_t v) RAPIDHASH_NOEXCEPT { return v; }
+RAPIDHASH_INLINE_CONSTEXPR uint32_t rapidhash_to_le_u32(const uint32_t v) RAPIDHASH_NOEXCEPT { return v; }
+RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhash_to_le_u64(const uint64_t v) RAPIDHASH_NOEXCEPT { return v; }
+#endif
+
+/*
+ *  rapidhash 8-bit integer hashing convenience function.
+ *
+ *  @param key     Integer to be hashed.
+ *  @param seed    64-bit seed used to alter the hash result predictably.
+ *
+ *  Signed integers can safely be cast to their unsigned equivalent for hashing.
+ */
+RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhash_uint8(const uint8_t key, const uint64_t seed) RAPIDHASH_NOEXCEPT {
+  return rapidhashNano_withSeed(&key, 1, seed);
+}
+
+/*
+ *  rapidhash 16-bit integer hashing convenience function.
+ *
+ *  @param key     Integer to be hashed.
+ *  @param seed    64-bit seed used to alter the hash result predictably.
+ *
+ *  Signed integers can safely be cast to their unsigned equivalent for hashing.
+ */
+RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhash_uint16(const uint16_t key, const uint64_t seed) RAPIDHASH_NOEXCEPT {
+  const uint16_t le = rapidhash_to_le_u16(key);
+  return rapidhashNano_withSeed(&le, 2, seed);
+}
+
+/*
+ *  rapidhash 32-bit integer hashing convenience function.
+ *
+ *  @param key     Integer to be hashed.
+ *  @param seed    64-bit seed used to alter the hash result predictably.
+ *
+ *  Signed integers can safely be cast to their unsigned equivalent for hashing.
+ */
+RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhash_uint32(const uint32_t key, const uint64_t seed) RAPIDHASH_NOEXCEPT {
+  const uint32_t le = rapidhash_to_le_u32(key);
+  return rapidhashNano_withSeed(&le, 4, seed);
+}
+
+/*
+ *  rapidhash 64-bit integer hashing convenience function.
+ *
+ *  @param key     Integer to be hashed.
+ *  @param seed    64-bit seed used to alter the hash result predictably.
+ *
+ *  Signed integers can safely be cast to their unsigned equivalent for hashing.
+ */
+RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhash_uint64(const uint64_t key, const uint64_t seed) RAPIDHASH_NOEXCEPT {
+  const uint64_t le = rapidhash_to_le_u64(key);
+  return rapidhashNano_withSeed(&le, 8, seed);
+}
