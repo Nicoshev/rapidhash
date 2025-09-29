@@ -1,4 +1,3 @@
-#pragma once
 /*
  * rapidhash V3 - Very fast, high quality, platform-independent hashing algorithm.
  *
@@ -28,6 +27,8 @@
  *   - rapidhash source repository: https://github.com/Nicoshev/rapidhash
  */
 
+ #pragma once
+ 
 /*
  *  Includes.
  */
