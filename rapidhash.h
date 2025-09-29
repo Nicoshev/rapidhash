@@ -27,6 +27,8 @@
  *   - rapidhash source repository: https://github.com/Nicoshev/rapidhash
  */
 
+ #pragma once
+ 
 /*
  *  Includes.
  */
@@ -564,4 +566,3 @@ RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhashMicro(const void *key, size_t len) 
 RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhashNano(const void *key, size_t len) RAPIDHASH_NOEXCEPT {
   return rapidhashNano_withSeed(key, len, 0);
 }
-
