@@ -27,6 +27,8 @@
  *   - rapidhash source repository: https://github.com/Nicoshev/rapidhash
  */
 
+ #pragma once
+ 
 /*
  *  Includes.
  */
