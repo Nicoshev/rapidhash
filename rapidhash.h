@@ -471,6 +471,42 @@ RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhash_internal(const void *key, size_t l
     rapid_mum(&a, &b);
     return rapid_mix(a ^ secret[7], b ^ secret[1] ^ i);
   }
+
+  /*
+  *  rapidhashInt main function, for integers >= 32 bits in size.
+  *
+  *  @param a       Low 64 bits of the integer data.
+  *  @param b       High 64 bits of the integer data.
+  *  @param len     Length of the source integer value in bytes.
+  *  @param seed    64-bit seed used to alter the hash result predictably.
+  *  @param secret  Triplet of 64-bit secrets used to alter hash result predictably.
+  *
+  *  Returns a 64-bit hash which is invariant with respect to endianness.
+  */
+  RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhashInt_internal(uint64_t a, uint64_t b, uint64_t len, uint64_t seed, const uint64_t* secret) RAPIDHASH_NOEXCEPT {
+    seed ^= rapid_mix(seed ^ secret[2], secret[1]) ^ len;
+    a ^= secret[1];
+    b ^= seed;
+    rapid_mum(&a, &b);
+    return rapid_mix(a ^ secret[7], b ^ secret[1] ^ len);
+  }
+
+  /*
+  *  rapidhashShort main function, for integers <= 16 bits in size.
+  *
+  *  @param lsb     Low 8 bits of the integer.
+  *  @param msb     High 8 bits of the integer.
+  *
+  *  Returns a 64-bit hash which is invariant with respect to endianness.
+  */
+  RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhashShort_internal(uint8_t lsb, uint8_t msb, uint64_t len, uint64_t seed, const uint64_t* secret) RAPIDHASH_NOEXCEPT {
+    seed ^= rapid_mix(seed ^ secret[2], secret[1]);
+    uint64_t a = (((uint64_t)lsb)<<45)|msb, b = msb;
+    a ^= secret[1];
+    b ^= seed;
+    rapid_mum(&a, &b);
+    return rapid_mix(a ^ secret[7], b ^ secret[1] ^ len);
+  }
  
 /*
  *  rapidhash seeded hash function.
@@ -565,4 +601,165 @@ RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhashMicro(const void *key, size_t len) 
  */
 RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhashNano(const void *key, size_t len) RAPIDHASH_NOEXCEPT {
   return rapidhashNano_withSeed(key, len, 0);
+}
+
+/*
+ *  rapidhashInt8 seeded hash function.
+ *
+ *  @param key     Integer to be hashed.
+ *  @param seed    64-bit seed used to alter the hash result predictably.
+ *
+ *  Calls rapidhash_internal using provided parameters and default secrets.
+ *
+ *  Returns a 64-bit hash.
+ */
+ RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhashInt8_withSeed(uint8_t key, uint64_t seed) RAPIDHASH_NOEXCEPT {
+  return rapidhashShort_internal(key, key, 1, seed, rapid_secret);
+}
+
+/*
+ *  rapidhashInt8 hash function.
+ *
+ *  Suitable for Mobile and embedded applications, where keeping a small code size is a top priority.
+ *  Signed integers can safely be cast to their unsigned equivalent for hashing.
+ *
+ *  @param key     Integer to be hashed.
+ *  @param len     @key length, in bytes.
+ *
+ *  Calls rapidhash_withSeed using provided parameters and the default seed.
+ *
+ *  Returns a 64-bit hash.
+ */
+RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhashInt8(uint8_t key) RAPIDHASH_NOEXCEPT {
+  return rapidhashInt8_withSeed(key, 0);
+}
+
+/*
+ *  rapidhashInt16 seeded hash function.
+ *
+ *  @param key     Integer to be hashed.
+ *  @param seed    64-bit seed used to alter the hash result predictably.
+ *
+ *  Calls rapidhash_internal using provided parameters and default secrets.
+ *
+ *  Returns a 64-bit hash.
+ */
+ RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhashInt16_withSeed(uint16_t key, uint64_t seed) RAPIDHASH_NOEXCEPT {
+  return rapidhashShort_internal(key&0xff, key>>8, 2, seed, rapid_secret);
+}
+
+/*
+ *  rapidhashInt16 hash function.
+ *
+ *  Suitable for Mobile and embedded applications, where keeping a small code size is a top priority.
+ *  Behaves identically on big- and little-endian systems, behaving as if the key is little-endian.
+ *  Signed integers can safely be cast to their unsigned equivalent for hashing.
+ *
+ *  @param key     Integer to be hashed.
+ *  @param len     @key length, in bytes.
+ *
+ *  Calls rapidhash_withSeed using provided parameters and the default seed.
+ *
+ *  Returns a 64-bit hash.
+ */
+RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhashInt16(uint16_t key) RAPIDHASH_NOEXCEPT {
+  return rapidhashInt16_withSeed(key, 0);
+}
+
+/*
+ *  rapidhashInt32 seeded hash function.
+ *
+ *  @param key     Integer to be hashed.
+ *  @param seed    64-bit seed used to alter the hash result predictably.
+ *
+ *  Calls rapidhash_internal using provided parameters and default secrets.
+ *
+ *  Returns a 64-bit hash.
+ */
+ RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhashInt32_withSeed(uint32_t key, uint64_t seed) RAPIDHASH_NOEXCEPT {
+  return rapidhashInt_internal(key, key, 4, seed, rapid_secret);
+}
+
+/*
+ *  rapidhashInt32 hash function.
+ *
+ *  Suitable for Mobile and embedded applications, where keeping a small code size is a top priority.
+ *  Behaves identically on big- and little-endian systems, behaving as if the key is little-endian.
+ *  Signed integers can safely be cast to their unsigned equivalent for hashing.
+ *
+ *  @param key     Integer to be hashed.
+ *  @param len     @key length, in bytes.
+ *
+ *  Calls rapidhash_withSeed using provided parameters and the default seed.
+ *
+ *  Returns a 64-bit hash.
+ */
+RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhashInt32(uint32_t key) RAPIDHASH_NOEXCEPT {
+  return rapidhashInt32_withSeed(key, 0);
+}
+
+/*
+ *  rapidhashInt64 seeded hash function.
+ *
+ *  @param key     Integer to be hashed.
+ *  @param seed    64-bit seed used to alter the hash result predictably.
+ *
+ *  Calls rapidhash_internal using provided parameters and default secrets.
+ *
+ *  Returns a 64-bit hash.
+ */
+ RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhashInt64_withSeed(uint64_t key, uint64_t seed) RAPIDHASH_NOEXCEPT {
+  return rapidhashInt_internal(key, key, 8, seed, rapid_secret);
+}
+
+/*
+ *  rapidhashInt64 hash function.
+ *
+ *  Suitable for Mobile and embedded applications, where keeping a small code size is a top priority.
+ *  Behaves identically on big- and little-endian systems, behaving as if the key is little-endian.
+ *  Signed integers can safely be cast to their unsigned equivalent for hashing.
+ *
+ *  @param key     Integer to be hashed.
+ *  @param len     @key length, in bytes.
+ *
+ *  Calls rapidhash_withSeed using provided parameters and the default seed.
+ *
+ *  Returns a 64-bit hash.
+ */
+RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhashInt64(uint64_t key) RAPIDHASH_NOEXCEPT {
+  return rapidhashInt64_withSeed(key, 0);
+}
+
+/*
+ *  rapidhashInt128 seeded hash function.
+ *
+ *  @param lsb     Low 64 bits of integer to be hashed.
+ *  @param msb     High 64 bits of integer to be hashed.
+ *  @param seed    64-bit seed used to alter the hash result predictably.
+ *
+ *  Calls rapidhash_internal using provided parameters and default secrets.
+ *
+ *  Returns a 64-bit hash.
+ */
+ RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhashInt128_withSeed(uint64_t lsb, uint64_t msb, uint64_t seed) RAPIDHASH_NOEXCEPT {
+  return rapidhashInt_internal(lsb, msb, 16, seed, rapid_secret);
+}
+
+/*
+ *  rapidhashInt128 hash function.
+ *
+ *  Suitable for Mobile and embedded applications, where keeping a small code size is a top priority.
+ *  Behaves identically on big- and little-endian systems, behaving as if the key is little-endian.
+ *  Signed integers can safely be cast to their unsigned equivalent for hashing.
+ *
+ *  @param lsb     Low 64 bits of integer to be hashed.
+ *  @param msb     High 64 bits of integer to be hashed.
+ *  @param len     @key length, in bytes.
+ *
+ *  Calls rapidhash_withSeed using provided parameters and the default seed.
+ *
+ *  Returns a 64-bit hash.
+ */
+RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhashInt128(uint64_t lsb, uint64_t msb) RAPIDHASH_NOEXCEPT {
+  return rapidhashInt128_withSeed(lsb, msb, 0);
 }
