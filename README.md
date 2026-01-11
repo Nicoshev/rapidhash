@@ -106,3 +106,4 @@ Ports
 [Java](https://github.com/dynatrace-oss/hash4j?tab=readme-ov-file#hash-algorithms) by hash4j  
 [Rust](https://github.com/hoxxep/rapidhash) by hoxxep  
 [JavaScript](https://github.com/komiya-atsushi/rapidhash-js) by komiya-atsushi  
+[Go](https://github.com/dwisiswant0/rapidhash) by dwisiswant0  
