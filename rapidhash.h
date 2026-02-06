@@ -247,21 +247,21 @@ RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhash_internal(const void *key, size_t l
   size_t i = len;
   if (_likely_(len <= 16)) {
     const uint8_t* pend = p + len;
-      if (len >= 4) {
-        seed ^= len;
-        if (len >= 8) {
-          const uint8_t* plast = pend - 8;
-          a = rapid_read64(p);
-          b = rapid_read64(plast);
-        } else {
-          const uint8_t* plast = pend - 4;
-          a = rapid_read32(p);
-          b = rapid_read32(plast);
-        }
-      } else if (_likely_(len > 0)) {
-        a = (((uint64_t)p[0])<<11)|pend[-1];
-        b = p[len>>1];
+    if (len >= 4) {
+      seed ^= len;
+      if (len > 8) {
+        const uint8_t* plast = pend - 8;
+        a = rapid_read64(p);
+        b = rapid_read64(plast);
+      } else {
+        const uint8_t* plast = pend - 4;
+        a = rapid_read32(p);
+        b = rapid_read32(plast);
       }
+    } else if (_likely_(len > 0)) {
+      a = (((uint64_t)p[0])<<11)|pend[-1];
+      b = p[len>>1];
+    }
   } else {
     if (len > 112) {
       seed ^= len;
@@ -363,7 +363,7 @@ RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhash_internal(const void *key, size_t l
       const uint8_t* pend = p + len;
       if (len >= 4) {
         seed ^= len;
-        if (len >= 8) {
+        if (len > 8) {
           const uint8_t* plast = pend - 8;
           a = rapid_read64(p);
           b = rapid_read64(plast);
@@ -433,7 +433,7 @@ RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhash_internal(const void *key, size_t l
       const uint8_t* pend = p + len;
       if (len >= 4) {
         seed ^= len;
-        if (len >= 8) {
+        if (len > 8) {
           const uint8_t* plast = pend - 8;
           a = rapid_read64(p);
           b = rapid_read64(plast);
