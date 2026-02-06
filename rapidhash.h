@@ -246,21 +246,22 @@ RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhash_internal(const void *key, size_t l
   uint64_t a=0, b=0;
   size_t i = len;
   if (_likely_(len <= 16)) {
-    if (len >= 4) {
-      seed ^= len;
-      if (len >= 8) {
-        const uint8_t* plast = p + len - 8;
-        a = rapid_read64(p);
-        b = rapid_read64(plast);
-      } else {
-        const uint8_t* plast = p + len - 4;
-        a = rapid_read32(p);
-        b = rapid_read32(plast);
+    const uint8_t* pend = p + len;
+      if (len >= 4) {
+        seed ^= len;
+        if (len >= 8) {
+          const uint8_t* plast = pend - 8;
+          a = rapid_read64(p);
+          b = rapid_read64(plast);
+        } else {
+          const uint8_t* plast = pend - 4;
+          a = rapid_read32(p);
+          b = rapid_read32(plast);
+        }
+      } else if (_likely_(len > 0)) {
+        a = (((uint64_t)p[0])<<11)|pend[-1];
+        b = p[len>>1];
       }
-    } else if (_likely_(len > 0)) {
-      a = (((uint64_t)p[0])<<11)|p[len-1];
-      b = p[len>>1];
-    }
   } else {
     if (len > 112) {
       seed ^= len;
@@ -359,19 +360,20 @@ RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhash_internal(const void *key, size_t l
     uint64_t a=0, b=0;
     size_t i = len;
     if (_likely_(len <= 16)) {
+      const uint8_t* pend = p + len;
       if (len >= 4) {
         seed ^= len;
         if (len >= 8) {
-          const uint8_t* plast = p + len - 8;
+          const uint8_t* plast = pend - 8;
           a = rapid_read64(p);
           b = rapid_read64(plast);
         } else {
-          const uint8_t* plast = p + len - 4;
+          const uint8_t* plast = pend - 4;
           a = rapid_read32(p);
           b = rapid_read32(plast);
         }
       } else if (_likely_(len > 0)) {
-        a = (((uint64_t)p[0])<<11)|p[len-1];
+        a = (((uint64_t)p[0])<<11)|pend[-1];
         b = p[len>>1];
       }
     } else {
@@ -428,19 +430,20 @@ RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhash_internal(const void *key, size_t l
     seed ^= rapid_mix(seed ^ secret[2], secret[1]);
     uint64_t a=0, b=0;
     if (_likely_(len <= 16)) {
+      const uint8_t* pend = p + len;
       if (len >= 4) {
         seed ^= len;
         if (len >= 8) {
-          const uint8_t* plast = p + len - 8;
+          const uint8_t* plast = pend - 8;
           a = rapid_read64(p);
           b = rapid_read64(plast);
         } else {
-          const uint8_t* plast = p + len - 4;
+          const uint8_t* plast = pend - 4;
           a = rapid_read32(p);
           b = rapid_read32(plast);
         }
       } else if (_likely_(len > 0)) {
-        a = (((uint64_t)p[0])<<11)|p[len-1];
+        a = (((uint64_t)p[0])<<11)|pend[-1];
         b = p[len>>1];
       }
     } else {
