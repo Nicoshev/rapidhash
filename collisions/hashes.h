@@ -101,14 +101,14 @@ UniHash badsum32_wrapper (const void* data, size_t size)
     return uniHash32( badsum32(data, size, 0) );
 }
 
+UniHash rapidhashJumbo_wrapper (const void* data, size_t size)
+{
+    return uniHash64 ( rapidhashJumbo(data, size) );
+}
+
 UniHash rapidhash_wrapper (const void* data, size_t size)
 {
     return uniHash64 ( rapidhash(data, size) );
-}
-
-UniHash rapidhashMicro_wrapper (const void* data, size_t size)
-{
-    return uniHash64 ( rapidhashMicro(data, size) );
 }
 
 UniHash rapidhashNano_wrapper (const void* data, size_t size)
@@ -136,8 +136,8 @@ hashDescription hashfnTable[HASH_FN_TOTAL] = {
     { "xxh128h", XXH128h_wrapper,  64 },
     { "xxh32" ,  XXH32_wrapper,    32 },
     { "badsum32", badsum32_wrapper, 32 },
-    { "rapidhash", rapidhash_wrapper, 64 },
-    { "rapidhashMicro" , rapidhashMicro_wrapper, 64 },
+    { "rapidhashJumbo", rapidhashJumbo_wrapper, 64 },
+    { "rapidhash" , rapidhash_wrapper, 64 },
     { "rapidhashNano" , rapidhashNano_wrapper, 64 },
 };
 

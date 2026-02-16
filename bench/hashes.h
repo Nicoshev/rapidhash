@@ -67,16 +67,16 @@
  #include "xxhash.h"
  #include "rapidhash.h"
 
+size_t rapidhashJumbo_wrapper(const void* src, size_t srcSize, void* dst, size_t dstCapacity, void* customPayload)
+{
+    (void)dst; (void)dstCapacity; (void)customPayload;
+    return (size_t) rapidhashJumbo(src, srcSize);
+}
+
 size_t rapidhash_wrapper(const void* src, size_t srcSize, void* dst, size_t dstCapacity, void* customPayload)
 {
     (void)dst; (void)dstCapacity; (void)customPayload;
     return (size_t) rapidhash(src, srcSize);
-}
-
-size_t rapidhashMicro_wrapper(const void* src, size_t srcSize, void* dst, size_t dstCapacity, void* customPayload)
-{
-    (void)dst; (void)dstCapacity; (void)customPayload;
-    return (size_t) rapidhashMicro(src, srcSize);
 }
 
 size_t rapidhashNano_wrapper(const void* src, size_t srcSize, void* dst, size_t dstCapacity, void* customPayload)
@@ -101,8 +101,8 @@ size_t xxh3_wrapper(const void* src, size_t srcSize, void* dst, size_t dstCapaci
 
 Bench_Entry const hashCandidates[NB_HASHES] = {
     { "rapidhash" , rapidhash_wrapper },
-    { "rapidhashMicro" , rapidhashMicro_wrapper },
     { "rapidhashNano" , rapidhashNano_wrapper },
+    { "rapidhashJumbo" , rapidhashJumbo_wrapper },
     { "xxh3"  , xxh3_wrapper },
 #ifdef HARDWARE_SUPPORT
     /* list here codecs which require specific hardware support, such SSE4.1, PCLMUL, AVX2, etc. */
