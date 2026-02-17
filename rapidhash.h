@@ -98,6 +98,16 @@
  # define _likely_(x) (x)
  # define _unlikely_(x) (x)
  #endif
+
+ /*
+  *  Likely macro, ignored on Apple compilation
+  *  Unusual side effects are observed when using Apple clang.
+  */
+ #if !defined(__clang__) || !defined(__apple_build_version__)
+ # define _maybe_likely_(x) _likely_(x) 
+ #else
+ # define _maybe_likely_(x) (x) 
+ #endif
  
  /*
   *  Endianness macros.
@@ -241,7 +251,7 @@ RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhashJumbo_internal(const void *key, siz
         a = rapid_read32(p);
         b = rapid_read32(plast);
       }
-    } else if (_likely_(len > 0)) {
+    } else if (_maybe_likely_(len > 0)) {
       a = (((uint64_t)p[0])<<11) | *(pend - 1);
       b = p[len>>1];
     }
@@ -428,7 +438,7 @@ RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhashJumbo_internal(const void *key, siz
           a = rapid_read32(p);
           b = rapid_read32(plast);
         }
-      } else if (_likely_(len > 0)) {
+      } else if (_maybe_likely_(len > 0)) {
         a = (((uint64_t)p[0])<<11) | *(pend - 1);
         b = p[len>>1];
       }
@@ -465,7 +475,8 @@ RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhashJumbo_internal(const void *key, siz
 /*
  *  rapidhashJumbo seeded hash function.
  *
- *  Designed for hashing inputs above 1kb.
+ *  General purpose hash function, amazing performance across all sizes.
+ *  Faster than rapidhash for input sizes greater than 1kb.
  *  Can be made even faster for inputs above 4k using RAPIDHASH_JUMBO_UNROLLED.
  *
  *  @param key     Buffer to be hashed.
@@ -531,10 +542,10 @@ RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhash(const void *key, size_t len) RAPID
 /*
  *  rapidhashNano seeded hash function.
  *
- *  Designed for maximum speed on inputs up to 256 bytes, excellent choice for hashmaps.
- *  Good on Mobile and embedded applications, where keeping a small code size is a top priority.
+ *  Designed for maximum speed on small inputs, excellent choice for hashmaps.
+ *  Good on mobile and embedded applications, where keeping a small code size is a top priority.
  *  Clang-18+ compiles it to less than 100 instructions, without stack usage on aarch64.
- *  The fastest for sizes up to 256 bytes, but may be considerably slower for larger inputs.
+ *  The fastest for sizes up to 240 bytes, may be considerably slower for larger inputs.
  *
  *  @param key     Buffer to be hashed.
  *  @param len     @key length, in bytes.
