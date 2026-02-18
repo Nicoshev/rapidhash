@@ -334,7 +334,8 @@ RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhashJumbo_internal(const void *key, siz
     b=rapid_read64(p+len-8); a=rapid_read64(p+len-16) ^ len;  
   }
   a ^= secret[0];
-  b ^= seed;
+  seed ^= b;
+  b = seed;
   rapid_mum(&a, &b);
   return rapid_mix(a ^ seed, b ^ secret[0] ^ len);
 }
@@ -406,7 +407,8 @@ RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhashJumbo_internal(const void *key, siz
       b=rapid_read64(p+len-8); a=rapid_read64(p+len-16) ^ len;
     }
     a ^= secret[0];
-    b ^= seed;
+    seed ^= b;
+    b = seed;
     rapid_mum(&a, &b);
     return rapid_mix(a ^ seed, b ^ secret[0] ^ len);
   }
@@ -465,9 +467,11 @@ RAPIDHASH_INLINE_CONSTEXPR uint64_t rapidhashJumbo_internal(const void *key, siz
         }
       }
       b=rapid_read64(p+len-8); a=rapid_read64(p+len-16) ^ len;
+      
     }
     a ^= secret[0];
-    b ^= seed;
+    seed ^= b;
+    b = seed;
     rapid_mum(&a, &b);
     return rapid_mix(a ^ seed, b ^ secret[0] ^ len);
   }
